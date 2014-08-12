@@ -20,7 +20,7 @@ class BlastOutputParser(object):
         for hit in root.iter("Hit"):
             acc_id =  hit.find("Hit_accession").text
             hit_info ={
-                       "hit_id": acc_id[:4], 
+                       "pdb": {"id": acc_id[:4]}, 
                        "hit_chain": acc_id[5:6],
                        "query_seq": [seq.text for seq in hit.iter("Hsp_qseq")][0],
                        "hit_seq__": [seq.text for seq in hit.iter("Hsp_hseq")][0], 
