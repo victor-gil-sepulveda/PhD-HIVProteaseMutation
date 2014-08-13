@@ -7,6 +7,7 @@ Created on 12/8/2014
 import prody
 import os
 import errno
+import json
 
 
 def get_pdb(pdb_id, selection):
@@ -48,3 +49,9 @@ def create_folder(directory_path, ensure_writability=False):
         if e.errno != errno.EEXIST:
             raise
     return False
+
+def save_json(items, path):
+    open(path, "w").write(json.dumps(items, 
+                                              sort_keys=False, 
+                                              indent=4, 
+                                              separators=(',', ': ')))

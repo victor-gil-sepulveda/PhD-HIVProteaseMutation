@@ -1,0 +1,55 @@
+ <BlastOutput>
+ 	<BlastOutput_iterations>
+ 		 <Iteration>
+ 		 	<Iteration_hits>
+ 				<Hit>
+		          <Hit_num>164</Hit_num>
+		          <Hit_id>gi|330689372|pdb|3HZC|A</Hit_id>
+		          <Hit_def>Chain A, Crystal Structure Of A Chemically Synthesized 203 Amino Acid &apos;covalent Dimer&apos; [gly51;aib51&apos;]hiv-1 Protease Molecule Complexed With Mvt-101 Reduced Isostere Inhibitor &gt;gi|330689375|pdb|3IAW|A Chain A, Crystal Structure Of A Chemically Synthesized 203 Amino Acid &apos;covalent Dimer&apos; [gly51;aib51&apos;]hiv-1 Protease Molecule Complexed With Mvt-101 Reduced Isostere Inhibitor At 1.6 A Resolution &gt;gi|345100693|pdb|3HLO|A Chain A, Crystal Structure Of Chemically Synthesized &apos;covalent Dimer&apos; [gly51D- Ala51&apos;]hiv-1 Protease</Hit_def>
+		          <Hit_accession>3HZC_A</Hit_accession>
+		          <Hit_len>203</Hit_len>
+		          <Hit_hsps>
+		            <Hsp>
+		              <Hsp_num>1</Hsp_num>
+		              <Hsp_bit-score>172.55524738001</Hsp_bit-score>
+		              <Hsp_score>436</Hsp_score>
+		              <Hsp_evalue>8.16716177109232e-55</Hsp_evalue>
+		              <Hsp_query-from>1</Hsp_query-from>
+		              <Hsp_query-to>99</Hsp_query-to>
+		              <Hsp_hit-from>105</Hsp_hit-from>
+		              <Hsp_hit-to>203</Hsp_hit-to>
+		              <Hsp_query-frame>0</Hsp_query-frame>
+		              <Hsp_hit-frame>0</Hsp_hit-frame>
+		              <Hsp_identity>86</Hsp_identity>
+		              <Hsp_positive>92</Hsp_positive>
+		              <Hsp_gaps>0</Hsp_gaps>
+		              <Hsp_align-len>99</Hsp_align-len>
+		              <Hsp_qseq>PQVTLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAIGTVLVGPTPVNIIGRNLLTQIGCTLNF</Hsp_qseq>
+		              <Hsp_hseq>PQITLWKRPLVTIRIGGQLKEALLDTGADDTVIEEXNLPGXWKPKXIGGIXGFIKVRQYDQIPVEIXGHKAIGTVLVGPTPVNIIGRNLLTQIGXTLNF</Hsp_hseq>
+		              <Hsp_midline>PQ+TLW+RPLVTI+IGGQLKEALLDTGADDTV+EE +LPG WKPK IGGI GFIKVRQYDQI +EI GHKAIGTVLVGPTPVNIIGRNLLTQIG TLNF</Hsp_midline>
+		            </Hsp>
+		            <Hsp>
+		              <Hsp_num>2</Hsp_num>
+		              <Hsp_bit-score>161.384459678407</Hsp_bit-score>
+		              <Hsp_score>407</Hsp_score>
+		              <Hsp_evalue>2.31546290301142e-50</Hsp_evalue>
+		              <Hsp_query-from>1</Hsp_query-from>
+		              <Hsp_query-to>99</Hsp_query-to>
+		              <Hsp_hit-from>1</Hsp_hit-from>
+		              <Hsp_hit-to>99</Hsp_hit-to>
+		              <Hsp_query-frame>0</Hsp_query-frame>
+					  <Hsp_hit-frame>0</Hsp_hit-frame>
+		              <Hsp_identity>87</Hsp_identity>
+		              <Hsp_positive>93</Hsp_positive>
+		              <Hsp_gaps>0</Hsp_gaps>
+		              <Hsp_align-len>99</Hsp_align-len>
+		              <Hsp_qseq>PQVTLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAIGTVLVGPTPVNIIGRNLLTQIGCTLNF</Hsp_qseq>
+		              <Hsp_hseq>PQITLWKRPLVTIRIGGQLKEALLDTGADDTVIEEXNLPGXWKPKXIGGIGGFIKVRQYDQIPVEIXGHKAIGTVLVGPTPVNIIGRNLLTQIGXTLNF</Hsp_hseq>
+		              <Hsp_midline>PQ+TLW+RPLVTI+IGGQLKEALLDTGADDTV+EE +LPG WKPK IGGIGGFIKVRQYDQI +EI GHKAIGTVLVGPTPVNIIGRNLLTQIG TLNF</Hsp_midline>
+		            </Hsp>
+		          </Hit_hsps>
+		        </Hit>
+ 			</Iteration>
+ 		</Iteration_hits>
+	</BlastOutput>
+</BlastOutput_iterations>

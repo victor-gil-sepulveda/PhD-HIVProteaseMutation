@@ -1,2 +1,3 @@
-/blast_db
-
+/db
+/tmp_db
+*.pyc

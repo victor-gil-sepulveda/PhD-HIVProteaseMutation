@@ -29,10 +29,5 @@ class BlastOutputParser(object):
                        }
             pdbs.append(hit_info)
         return pdbs
-    
-    def save(self, file_name):
-        open(file_name, "w").write(json.dumps(self.alignments, 
-                                              sort_keys=False, 
-                                              indent=4, 
-                                              separators=(',', ': ')))
+        
         
