@@ -7,7 +7,7 @@ import os
 import hivprotmut.tools as tools
 import prody
 import numpy
-from hivprotmut.blast.blastpCommands import BlastpCommands
+from hivprotmut.external.blast.blastpCommands import BlastpCommands
 
 ###############################
 ### DB CONFIG

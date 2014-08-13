@@ -24,6 +24,7 @@ class BlastOutputParser(object):
                        "hit_chain": acc_id[5:6],
                        "query_seq": [seq.text for seq in hit.iter("Hsp_qseq")][0],
                        "hit_seq__": [seq.text for seq in hit.iter("Hsp_hseq")][0], 
+                       "midline__": [seq.text for seq in hit.iter("Hsp_midline")][0],
                        "score": float([seq.text for seq in hit.iter("Hsp_score")][0]),
                        "gaps": int([seq.text for seq in hit.iter("Hsp_gaps")][0])
                        }

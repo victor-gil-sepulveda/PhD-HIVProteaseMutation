@@ -5,7 +5,7 @@ Created on 13/8/2014
 """
 from hivprotmut.sequences.fastaFile import FastaFile
 import os
-from hivprotmut.blast.blastOutputParser import BlastOutputParser
+from hivprotmut.external.blast.blastOutputParser import BlastOutputParser
 from hivprotmut.tools import save_json
 
 class BlastpCommands(object):
