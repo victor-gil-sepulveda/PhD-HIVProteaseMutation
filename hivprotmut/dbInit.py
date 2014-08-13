@@ -8,9 +8,6 @@ import hivprotmut.tools as tools
 import prody
 import numpy
 from hivprotmut.blast.blastpCommands import BlastpCommands
-from hivprotmut.blast.blastOutputParser import BlastOutputParser
-
-
 
 ###############################
 ### DB CONFIG
@@ -30,21 +27,24 @@ if __name__ == '__main__':
     tools.create_folder(PDB_TMP_DATABASE_FOLDER)
     tools.create_folder(PDB_DATABASE_FOLDER)
     
-    BlastpCommands.find_closest_sequence_pdbs()
+    blastp_parameters = {
+                        "exec": "blastp",
+                        "extra_args": "-remote",
+                        "blastp_output_file": "sequences.xml",
+                        "search_db_name": "pdbaa",
+                        "max_target_sequences": 10,
+                        "alignments_file": "alignments.json"
+                        }
+    alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
+                                                       blastp_parameters)
     
-    # Find close sequences 
-#     find_closest_sequence_pdbs("hivprotmut/test/HIV.fasta", "sequences.xml")
-    
-    # Parse results
-    bot =  BlastOutputParser("sequences.xml")
-    bot.save("alignments.json")
-    print "Found %d alignments"%(len(bot.alignments))
+    print "Found %d alignments"%(len(alignments))
  
     # Get the ids of pdbs without gap (backbones must be equal)
-    filtered_alignments = [alignment_info for alignment_info in bot.alignments[0:5] if alignment_info["gaps"] == 0]
+    filtered_alignments = [alignment_info for alignment_info in alignments[0:5] if alignment_info["gaps"] == 0]
     # IMPROVEMENT : LEAVE STRUCTURES WHERE THE GAPS ARE AT THE BEGGINING OR THE END TO SOME EXTENT
     # we need to store the offset
-    print "We have filtered %d structures because the alignment had gaps."%(len(bot.alignments) - len(filtered_alignments))
+    print "We have filtered %d structures because the alignment had gaps."%(len(alignments) - len(filtered_alignments))
      
     # Get the pdbs
     for alignment in filtered_alignments:
@@ -96,18 +96,15 @@ if __name__ == '__main__':
          
     # TODO: PROCESS ALT LOCS? I NEED AN EXAMPLE
     # TODO: STORE AA NAME IN POS 50
-    # FIND GAP EXAMPLE. ADD TOLERANCE TO BEG. AND ENDING GAPS
-    
+    # TODO: FIND GAP EXAMPLE. 
+    # TODO: ADD TOLERANCE TO BEGINNING AND ENDING GAPS
     
     # Keep one water or two?
-    # Ile 50 no siempre se conserva
+    # Ile 50 no siempre se conserva!
     # Mirar dist de centro de masas? o mejor de un atomo en concreto?
     
-    BlastCommands.create_database_from_alignments({
+    BlastpCommands.create_database_from_alignments(filtered_alignments,
+                                                  {
                                                    "new_database_name":"newdb",
-                                                   "database_title":'Filtered HIV-like sequences DB'
-                                                  },
-                                                  filtered_alignments)
-    
-     
-                        
+                                                   "database_title":"'Filtered HIV-like sequences DB'"
+                                                  })

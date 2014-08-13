@@ -7,8 +7,6 @@ from hivprotmut.sequences.fastaFile import FastaFile
 import os
 from hivprotmut.blast.blastOutputParser import BlastOutputParser
 from hivprotmut.tools import save_json
-BLASTP_EXEC = "blastp"
-BLAST_DB = "pdbaa"
 
 class BlastpCommands(object):
 
@@ -18,19 +16,26 @@ class BlastpCommands(object):
     BLASTP_ARGS =  " -query %s -out %s  -db %s -max_target_seqs %d -outfmt 5"
     
     @classmethod
-    def find_closest_sequence_pdbs(cls, query_fasta_file, alignments_output_file, parameters):
+    def find_closest_sequences(cls, query_fasta_file, parameters):
         """
         """
-        os.system(parameters["exec"] + 
-                  BlastpCommands.BLASTP_ARGS%(query_fasta_file, alignments_output_file, parameters["db_name"], parameters["max_target_sequences"]) +
-                  parameters["extra_args"]
-                  )
-        parser = BlastOutputParser(alignments_output_file)
+        command = "%s %s %s"%(parameters["exec"],
+                              BlastpCommands.BLASTP_ARGS%(query_fasta_file, 
+                                              parameters["blastp_output_file"], 
+                                              parameters["search_db_name"], 
+                                              parameters["max_target_sequences"]),
+                              parameters["extra_args"])
+        print command
+        os.system(command)
+        parser = BlastOutputParser(parameters["blastp_output_file"])
         save_json(parser.alignments, parameters["alignments_file"])
         return parser.alignments
     
+    
     @classmethod
     def create_database_from_alignments(cls, alignments, parameters):
+        """
+        """
         fasta_db_filename =  "%s.fasta"%parameters["new_database_name"]
         mask_db_filename = "%s.asnb"%parameters["new_database_name"]
         fasta_db_handler = FastaFile.open(fasta_db_filename)

@@ -5,27 +5,34 @@ Created on 13/8/2014
 
 :brief: Given a query compares the sequences with the ones in our database and generates the mutant
 """
-import os
-
-###############################
-### GLOBAL CONFIG
-MAX_SEQUENCES = 1
-###############################
-
-###############################
-### BLAST CONFIG
-BLASTP_EXEC = "blastp"
-BLASTP_ARGS =  " -query %s -out %s -remote -db %s -max_target_seqs %d -outfmt 5"
-BLAST_DB = "hiv_filtered_sequences"
-###############################
-
-def find_closest_sequence_pdbs(fasta_file, output_file):
-    """
-    """
-    os.system(BLASTP_EXEC + BLASTP_ARGS%(fasta_file, output_file, BLAST_DB, MAX_SEQUENCES))
+from hivprotmut.sequences.fastaFile import FastaFile
+from hivprotmut.blast.blastpCommands import BlastpCommands
 
 if __name__ == '__main__':
     seq = "PQVTLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAIGTVLVGPTPVNIIGRNLLTQIGCTLNF"
-    find_closest_sequence_pdbs()
+    
+    input_fasta = FastaFile.open("server_query.fasta")
+    input_fasta.write("TEST", seq)
+    input_fasta.close()
+    
+    blastp_parameters = {
+                        "exec": "blastp",
+                        "extra_args": "",
+                        "blastp_output_file": "squery_sequence.xml",
+                        "search_db_name": "newdb",
+                        "max_target_sequences": 1,
+                        "alignments_file": "squery_alignments.json"
+                        }
+    BlastpCommands.find_closest_sequences("server_query.fasta", 
+                                          blastp_parameters)
+    
+    # Get pdb from our database
+    
+    # 'Mutate' residues
+    
+    # Apply protein wizard
+    
+    
+    
     
     

@@ -22,8 +22,8 @@ class FastaFile(object):
         pass
     
     @classmethod
-    def open(cls, filename): 
-        handler = open(filename, "r")
+    def open(cls, filename, mode = "w"): 
+        handler = open(filename, mode)
         return FastaFileHandler(handler)
         
 class FastaFileHandler(object):

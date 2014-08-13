@@ -12,7 +12,7 @@ import cStringIO
 class TestFasta(unittest.TestCase):
     
     def test_open_and_close(self):
-        fasta_handler = FastaFile.open(os.path.join(data.__path__[0], "HIV.fasta"))
+        fasta_handler = FastaFile.open(os.path.join(data.__path__[0], "HIV.fasta"), "r")
         
         expected_contents = open(os.path.join(data.__path__[0], "HIV.fasta"),"r").read()
         fasta_contents = fasta_handler.handler.read()
