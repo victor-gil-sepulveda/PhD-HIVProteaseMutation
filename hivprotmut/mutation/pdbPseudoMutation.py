@@ -24,9 +24,9 @@ class PdbPseudoMutation(object):
         return mutations
     
     @classmethod
-    def process_pdb(cls, mutations, input_pdb_path, output_pdb_path, parameters):
-        handler = open(os.path.join("tmp_db",input_pdb_path),"r")
-        mut_handler = open(os.path.join("tmp_db","%s.mut"%(output_pdb_path)),"w")
+    def process_pdb(cls, mutations, input_pdb_path, parameters):
+        handler = open(os.path.join(parameters["structure_database"],input_pdb_path),"r")
+        mut_handler = open(parameters["output_file"], "w")
         cls.process_pdb_handlers(handler, mut_handler, mutations, parameters)
         handler.close()
         mut_handler.close()

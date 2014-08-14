@@ -9,12 +9,9 @@ import prody
 import numpy
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 import sys
-
-###############################
-### DB CONFIG
-PDB_TMP_DATABASE_FOLDER = "tmp_db"
-PDB_DATABASE_FOLDER = "db"
-###############################
+import json
+from hivprotmut.sequences.filters import AlignmentFilter, NoGapsFilter,\
+    ExactlyThisLengthFilter
 
 ###############################
 ### PREPROCESSING CONFIG
@@ -26,26 +23,32 @@ MAX_ALLOWED_ENDING_GAPS = 3
 
 if __name__ == '__main__':
     
-    parameters = tools.remove_comments(open(sys.argv[1]).read())
+    parameters = json.loads(tools.remove_comments(open(sys.argv[1]).read()))
     
-    tools.create_folder(PDB_TMP_DATABASE_FOLDER)
-    tools.create_folder(PDB_DATABASE_FOLDER)
+    tools.create_folder(parameters["global"]["structure_database"])
     
     alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
                                                        parameters["blastp"])
     
+    
     print "Found %d alignments"%(len(alignments))
- 
     # Get the ids of pdbs without gap (backbones must be equal)
-    filtered_alignments = [alignment_info for alignment_info in alignments[0:5] if alignment_info["gaps"] == 0]
+    al_filter = AlignmentFilter()
+    al_filter.add_filter(NoGapsFilter)
+    al_filter.add_filter(ExactlyThisLengthFilter, 99)
+    filtered_alignments = al_filter.filter(alignments)
     # IMPROVEMENT : LEAVE STRUCTURES WHERE THE GAPS ARE AT THE BEGGINING OR THE END TO SOME EXTENT
     # we need to store the offset
-    print "We have filtered %d structures because the alignment had gaps."%(len(alignments) - len(filtered_alignments))
-     
+    print "We have filtered %d structures."%(len(alignments) - len(filtered_alignments))
+    
+    
+    ####################################
+    # PDB STUFF
+    # TODO: encapsulate 
     # Get the pdbs
     for alignment in filtered_alignments:
         pdb, pdb_path = tools.get_pdb(alignment["pdb"]["id"], LOAD_SELECTION_STRING)
-        tmp_path = os.path.join(PDB_TMP_DATABASE_FOLDER, os.path.basename(pdb_path))
+        tmp_path = os.path.join(parameters["global"]["structure_database"], os.path.basename(pdb_path))
         os.remove(pdb_path)
          
         # Get chain info (without ligand or waters)
@@ -89,7 +92,13 @@ if __name__ == '__main__':
             tmp_struct = tmp_struct + water_structs[water_id]
          
         prody.writePDB(tmp_path+".prot_lig_water", tmp_struct)
-         
+    ####################################
+    
+    BlastpCommands.create_database_from_alignments(filtered_alignments,
+                                                  parameters["blast_database_creation"])
+
+    
+    
     # TODO: PROCESS ALT LOCS? I NEED AN EXAMPLE
     # TODO: STORE AA NAME IN POS 50
     # TODO: FIND GAP EXAMPLE. 
@@ -99,5 +108,4 @@ if __name__ == '__main__':
     # Ile 50 no siempre se conserva!
     # Mirar dist de centro de masas? o mejor de un atomo en concreto?
     
-    BlastpCommands.create_database_from_alignments(filtered_alignments,
-                                                  parameters["blast_database_creation"])
+    

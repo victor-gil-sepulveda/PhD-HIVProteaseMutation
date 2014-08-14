@@ -1,29 +1,59 @@
-
 {
 	/*******************************
 		Query sequence. 
 	********************************/
-	"query":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
-	//         X            X                                                        X
-	// Mutated with respect to the "template" sequence.
-	
-	"fasta_query": "server_query.fasta",
+	"query":{
+		// Mutated with respect to "template" sequence.
+		//         X            X                                                        X
+		"sequence":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
+		
+		"fasta_file": 				"server_query.fasta"		// Name of the fasta file that will be created
+																// 		with the above sequence		
+	},
 	
 	/*******************************
 		How to do the initial 
-		blast search. 
+		blast search to get 
+		1 alignment. 
 	********************************/
 	"blastp": {
-	    "exec": "blastp", 						// The blast executable (whole path if needed)
-	    "extra_args": "", 						// Nothing in this case
-	    "blastp_output_file": "sequences.xml", 	// Name of the blast output file
-	    "search_db_name": "pdbaa", 				// This must be the db we created with dbInit
-	    "max_target_sequences": 1 , 			// Maximum number of alignments to get
-	    "alignments_file": "alignments.json"	// Name of the filtered output json file
-	    										// 		containing the details about the alignments.
+	    "exec": 				"blastp", 						// The blast executable (whole path if needed)
+	    "extra_args": 			"", 							// Nothing in this case
+	    "blastp_output_file": 	"query_seq.xml", 				// Name of the blast output file
+	    "search_db_name": 		"newdb", 						// This must be the db we created with dbInit
+	    "max_target_sequences": 1 , 							// Maximum number of alignments to get
+	    "alignments_file": 		"query_seq.json"				// Name of the filtered output json file
+				    											// 		containing the details about the alignments.
 	},
 	
 	
+	/*******************************
+		How to mutate
+	********************************/
+	"mutation":{
+		"output_file": "mutated_tmp.pdb",
+		"structure_database": "db"								// Folder containing the downloaded structs.
+	},
+	/*******************************
+		How to run PLOP 
+	********************************/
+	"plop":{
+       "exec": 				"/home/victor/plop/plop_ROT_tmp",	// PLOP executable (whole path if needed)
+       "control_file": 		"reconstruct_control_file",			// Name of the auto-created control file
+       "data_path": 		"/home/victor/plop/data",			// PLOP data path
+       "output_file": 		"mutated.pdb",						// The 'MUTATED' and COMPLETE pdb file
+       "options":{
+                  "hetero":	"no",								// "yes" or "no". Load heteroatoms
+                  "optimize":"no"								// "yes" or "no". Perform PLOP optimization
+       }
+	},
 	
-	
+	/*******************************
+		How to run Protein Wizard
+	********************************/
+	"protein_wizard":{
+		"exec": "$SCHRODINGER/utilities/prepwizard",			// PW executable (whole path if needed)
+		"options": "-noimpref -fix", 							// Options for prot wizard
+		"output_file": "final.pdb"								// File name of The Final PDB!!!
+	}
 }

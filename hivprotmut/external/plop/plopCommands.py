@@ -8,7 +8,8 @@ import os
 
 class PlopCommands(object):
         
-    PLOP_CONTROL_TEMPLATE = """load pdb %s het yes ions yes wat yes 
+    PLOP_CONTROL_TEMPLATE = """data %s
+    load pdb %s het %s ions yes wat yes opt %s
     write pdb %s
     """
     
@@ -18,8 +19,12 @@ class PlopCommands(object):
         pass
     
     @classmethod
-    def reconstruct_pdb(cls, input_pdb, output_pdb, parameters):
-        script = PlopCommands.PLOP_CONTROL_TEMPLATE%(input_pdb, output_pdb)
+    def reconstruct_pdb(cls, input_pdb, parameters):
+        script = PlopCommands.PLOP_CONTROL_TEMPLATE%(parameters["data_path"], 
+                                                     input_pdb, 
+                                                     parameters["options"]["optimize"],
+                                                     parameters["options"]["hetero"],
+                                                     parameters["output_file"])
         open(parameters["control_file"],"w").write(script)
         os.system(PlopCommands.PLOP_EXECUTION%(parameters["exec"], parameters["control_file"]))
     

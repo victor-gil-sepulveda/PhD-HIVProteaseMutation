@@ -1,6 +1,14 @@
 
 {
 	/*******************************
+		Some global stuff
+	********************************/
+	"global":{
+		"structure_database": "db"							// Folder containing the downloaded structs.
+	},
+	
+	
+	/*******************************
 		How to do the initial 
 		blast search. 
 	********************************/

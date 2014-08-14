@@ -27,7 +27,7 @@ class BlastpCommands(object):
                               parameters["extra_args"])
         print command
         os.system(command)
-        parser = BlastOutputParser(parameters["blastp_output_file"])
+        parser = BlastOutputParser(parameters["blastp_output_file"], True)
         save_json(parser.alignments, parameters["alignments_file"])
         return parser.alignments
     

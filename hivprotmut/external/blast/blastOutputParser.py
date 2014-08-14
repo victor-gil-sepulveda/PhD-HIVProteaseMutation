@@ -8,7 +8,6 @@ import xml.etree.ElementTree
 
 class BlastOutputParser(object):
 
-
     def __init__(self, blast_output_file, only_one_alignment_per_hit):
         tree =  xml.etree.ElementTree.parse(blast_output_file)
         self.alignments = self.parse_hits(tree, only_one_alignment_per_hit)
