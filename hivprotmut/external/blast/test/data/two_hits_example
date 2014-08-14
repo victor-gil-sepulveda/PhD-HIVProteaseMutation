@@ -49,7 +49,7 @@
 		            </Hsp>
 		          </Hit_hsps>
 		        </Hit>
- 			</Iteration>
- 		</Iteration_hits>
-	</BlastOutput>
-</BlastOutput_iterations>
+	 		</Iteration_hits>
+ 		</Iteration>
+	</BlastOutput_iterations>
+</BlastOutput>

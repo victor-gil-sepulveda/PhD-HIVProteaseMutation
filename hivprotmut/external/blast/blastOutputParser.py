@@ -5,30 +5,34 @@ Created on 12/8/2014
 """
 
 import xml.etree.ElementTree
-import json
 
 class BlastOutputParser(object):
 
 
-    def __init__(self, blast_output_file):
+    def __init__(self, blast_output_file, only_one_alignment_per_hit):
         tree =  xml.etree.ElementTree.parse(blast_output_file)
-        self.alignments = self.parse_hits(tree)
+        self.alignments = self.parse_hits(tree, only_one_alignment_per_hit)
         
-    def parse_hits(self, tree):
+    def parse_hits(self, tree, only_one_alignment_per_hit):
         root = tree.getroot()
-        pdbs = []
+        alignments = []
         for hit in root.iter("Hit"):
             acc_id =  hit.find("Hit_accession").text
-            hit_info ={
-                       "pdb": {"id": acc_id[:4]}, 
-                       "hit_chain": acc_id[5:6],
-                       "query_seq": [seq.text for seq in hit.iter("Hsp_qseq")][0],
-                       "hit_seq__": [seq.text for seq in hit.iter("Hsp_hseq")][0], 
-                       "midline__": [seq.text for seq in hit.iter("Hsp_midline")][0],
-                       "score": float([seq.text for seq in hit.iter("Hsp_score")][0]),
-                       "gaps": int([seq.text for seq in hit.iter("Hsp_gaps")][0])
-                       }
-            pdbs.append(hit_info)
-        return pdbs
+            for hsp in hit.iter("Hsp"):
+                hit_info ={
+                           "pdb": {"id": acc_id[:4]}, 
+                           "hit_chain": acc_id[5:6],
+                           "query_seq": hsp.find("Hsp_qseq").text,
+                           "hit_seq__": hsp.find("Hsp_hseq").text, 
+                           "midline__": hsp.find("Hsp_midline").text,
+                           "score": float(hsp.find("Hsp_score").text),
+                           "gaps": int(hsp.find("Hsp_gaps").text)
+                           }
+                
+                alignments.append(hit_info)
+                
+                if only_one_alignment_per_hit:
+                    break # We only store one hsp
+        return alignments
         
         

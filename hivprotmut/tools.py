@@ -8,6 +8,7 @@ import prody
 import os
 import errno
 import json
+import re
 
 
 def get_pdb(pdb_id, selection):
@@ -55,3 +56,48 @@ def save_json(items, path):
                                               sort_keys=False, 
                                               indent=4, 
                                               separators=(',', ': ')))
+    
+def remove_comments(string):
+    """
+    Removes /**/ and // comments from a string (used with the control script).
+    From http://stackoverflow.com/questions/2319019/using-regex-to-remove-comments-from-source-files
+    """
+    string = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,string) # remove all occurance streamed comments (/*COMMENT */) from string
+    string = re.sub(re.compile("//.*?\n" ) ,"" ,string) # remove all occurance singleline comments (//COMMENT\n ) from string
+    return string
+
+
+aa_dic_standard = {'asp': 'D', 'glu': 'E', 'lys': 'K', 'his': 'H', 'arg': 'R',
+                 'gln': 'Q', 'asn': 'N', 'ser': 'S', 'asx': 'B', 'glx': 'Z',
+                 'phe': 'F', 'trp': 'W', 'tyr': 'Y', 'gly': 'G', 'ala': 'A',
+                 'ile': 'I', 'leu': 'L', 'cys': 'C', 'met': 'M', 'thr': 'T',
+                 'val': 'V', 'pro': 'P', 'cyx': 'C', 'hid': 'H', 'hie': 'H',
+                 'hip': 'H', 'unk': 'X', 'ace': 'X', 'nme': 'X'}
+
+def get_protein_sequence(pdb):
+    """
+    Generates the 1 letter per residue sequence for a protein. Uses a dictionary that maps the 3 letter naming with the 1 letter naming convention
+    Source:
+        - Biskit (http://biskit.pasteur.fr/)
+
+    @param pdb: A prody pdb data structure.
+
+    @return: A string with the sequence of this protein.
+    """
+    
+
+    # One-liner just for the sake of the challenge
+    return "".join([aa_dic_standard[resname] if resname in aa_dic_standard else "X" for resname in
+                    [residue.getResname().lower() for residue in prody.HierView(pdb).iterResidues()]])
+
+def one_letter_residue_to_three(char_resid):
+    """
+    http://stackoverflow.com/questions/483666/python-reverse-inverse-a-mapping
+    """
+    inv_map = {v:k for k, v in aa_dic_standard.items()}
+    three_char_res_id = "UNK"
+    try:
+        three_char_res_id =  inv_map[char_resid]
+    except Exception:
+        pass
+    return three_char_res_id

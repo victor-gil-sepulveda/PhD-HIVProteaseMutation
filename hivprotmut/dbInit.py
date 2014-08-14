@@ -8,6 +8,7 @@ import hivprotmut.tools as tools
 import prody
 import numpy
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
+import sys
 
 ###############################
 ### DB CONFIG
@@ -24,19 +25,14 @@ MAX_ALLOWED_ENDING_GAPS = 3
 
 
 if __name__ == '__main__':
+    
+    parameters = tools.remove_comments(open(sys.argv[1]).read())
+    
     tools.create_folder(PDB_TMP_DATABASE_FOLDER)
     tools.create_folder(PDB_DATABASE_FOLDER)
     
-    blastp_parameters = {
-                        "exec": "blastp",
-                        "extra_args": "-remote",
-                        "blastp_output_file": "sequences.xml",
-                        "search_db_name": "pdbaa",
-                        "max_target_sequences": 10,
-                        "alignments_file": "alignments.json"
-                        }
     alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
-                                                       blastp_parameters)
+                                                       parameters["blastp"])
     
     print "Found %d alignments"%(len(alignments))
  
@@ -104,7 +100,4 @@ if __name__ == '__main__':
     # Mirar dist de centro de masas? o mejor de un atomo en concreto?
     
     BlastpCommands.create_database_from_alignments(filtered_alignments,
-                                                  {
-                                                   "new_database_name":"newdb",
-                                                   "database_title":"'Filtered HIV-like sequences DB'"
-                                                  })
+                                                  parameters["blast_database_creation"])
