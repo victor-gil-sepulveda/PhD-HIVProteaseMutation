@@ -4,7 +4,8 @@
 		Some global stuff
 	********************************/
 	"global":{
-		"structure_database": "db"							// Folder containing the downloaded structs.
+		"structure_database": "db",							// Folder containing the downloaded structs.
+		"log_name": "db_creation.log"
 	},
 	
 	
@@ -22,6 +23,14 @@
 	    										// 		containing the details about the alignments.
 	},
 	
+	/*******************************
+		How to prepare the pdbs.
+	********************************/
+	"pdb_preparation": {
+		"load_selection": "all",
+		"forbidden_residues": ["478","017"]
+	
+	},	
 	
 	/*******************************
 		Parameters to create the
@@ -29,11 +38,12 @@
 		one used by the server) 
 	********************************/
 	"blast_database_creation":{
-       "new_database_name":"newdb",							// Name of the new DB
-       "database_title":"'Filtered HIV-like sequences DB'", 	// Title of the DB
-       "segmasker_exe": "segmasker",
-       "makeblastdb_exe": "makeblastdb",
-       "blastdbcmnd_exe": "blastdbcmd"
+		"new_database_folder": "blast_db",
+       	"new_database_name":"new_blast_db",						// Name of the new DB
+       	"database_title":"'Filtered HIV-like sequences DB'", 	// Title of the DB
+       	"segmasker_exe": "segmasker",
+       	"makeblastdb_exe": "makeblastdb",
+       	"blastdbcmnd_exe": "blastdbcmd"
 	}
 	
 }

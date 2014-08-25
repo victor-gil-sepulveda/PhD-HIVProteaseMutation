@@ -6,7 +6,7 @@ Created on 13/8/2014
 from hivprotmut.sequences.fastaFile import FastaFile
 import os
 from hivprotmut.external.blast.blastOutputParser import BlastOutputParser
-from hivprotmut.tools import save_json
+import hivprotmut.tools as tools
 
 class BlastpCommands(object):
 
@@ -28,7 +28,6 @@ class BlastpCommands(object):
         print command
         os.system(command)
         parser = BlastOutputParser(parameters["blastp_output_file"], True)
-        save_json(parser.alignments, parameters["alignments_file"])
         return parser.alignments
     
     
@@ -36,6 +35,7 @@ class BlastpCommands(object):
     def create_database_from_alignments(cls, alignments, parameters):
         """
         """
+        
         fasta_db_filename =  "%s.fasta"%parameters["new_database_name"]
         mask_db_filename = "%s.asnb"%parameters["new_database_name"]
         fasta_db_handler = FastaFile.open(fasta_db_filename)
@@ -56,5 +56,13 @@ class BlastpCommands(object):
                                        mask_db_filename,
                                        parameters["new_database_name"],
                                        parameters["database_title"]))
+        if parameters["new_database_folder"] != "":
+            tools.create_folder(parameters["new_database_folder"])
+            os.system("mv %s.* %s"%(
+                                    parameters["new_database_name"],
+                                    parameters["new_database_folder"])
+                      )
+               
         # Check
-        os.system("%s -db %s -info"%parameters["new_database_name"])%(parameters["blastdbcmnd_exe"])    
+        os.system("%s -db %s -info"%(parameters["blastdbcmnd_exe"], 
+                                     parameters["new_database_name"])) 

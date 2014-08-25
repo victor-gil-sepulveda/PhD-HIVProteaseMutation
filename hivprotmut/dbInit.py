@@ -6,16 +6,19 @@ Created on 12/8/2014
 import os
 import hivprotmut.tools as tools
 import prody
-import numpy
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 import sys
 import json
 from hivprotmut.filters.sequences.filters import SequenceAlignmentFilter, NoGapsFilter,\
     ExactlyThisLengthFilter
+from hivprotmut.filters.structures.filters import StructureAlignmentFilter,\
+    NoResiduesNamed
+from hivprotmut.structures.pdbcuration import curate_struct
+from hivprotmut.tools import save_json
+from datetime import datetime
 
 ###############################
 ### PREPROCESSING CONFIG
-LOAD_SELECTION_STRING = "all"
 MAX_ALLOWED_BEGINNING_GAPS = 3
 MAX_ALLOWED_ENDING_GAPS = 3
 ###############################
@@ -23,15 +26,25 @@ MAX_ALLOWED_ENDING_GAPS = 3
 
 if __name__ == '__main__':
     
+    
     parameters = json.loads(tools.remove_comments(open(sys.argv[1]).read()))
+
+    log = open(parameters["global"]["log_name"],"w")
+    log.write(datetime.now().strftime("Started on %A, %d. %B %Y %I:%M%p\n"))
     
     tools.create_folder(parameters["global"]["structure_database"])
     
+
+    ##########
+    # Find alignments
+    ##########
     alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
                                                        parameters["blastp"])
+    log.write("Found %d alignments\n"%(len(alignments)))
     
-    
-    print "Found %d alignments"%(len(alignments))
+    ##########
+    # Filter them
+    ##########
     # Get the ids of pdbs without gap (backbones must be equal)
     al_filter = SequenceAlignmentFilter()
     al_filter.add_filter(NoGapsFilter)
@@ -39,65 +52,38 @@ if __name__ == '__main__':
     filtered_alignments = al_filter.filter(alignments)
     # IMPROVEMENT : LEAVE STRUCTURES WHERE THE GAPS ARE AT THE BEGGINING OR THE END TO SOME EXTENT
     # we need to store the offset
-    print "We have filtered %d structures."%(len(alignments) - len(filtered_alignments))
+    log.write("We have filtered %d structures because of their sequence features.\n"%(len(alignments) - len(filtered_alignments)))
     
-    
-    ####################################
-    # PDB STUFF
-    # TODO: encapsulate 
-    # Get the pdbs
+
+    ##########
+    # Curate structures
+    ##########    
+    structure_filter = StructureAlignmentFilter()
+    structure_filter.add_filter(NoResiduesNamed, 
+                                parameters["pdb_preparation"]["forbidden_residues"])
     for alignment in filtered_alignments:
-        pdb, pdb_path = tools.get_pdb(alignment["pdb"]["id"], LOAD_SELECTION_STRING)
-        tmp_path = os.path.join(parameters["global"]["structure_database"], os.path.basename(pdb_path))
-        os.remove(pdb_path)
-         
-        # Get chain info (without ligand or waters)
-        hw = prody.HierView(pdb.select("protein"))
-         
-        alignment["pdb"]["num_chains"] = hw.numChains()
-        for chain in hw.iterChains():
-            alignment["pdb"]["chain_"+chain.getChid()] = chain.getSequence()
-         
-        water_structs = {}
-        for chain in hw.iterChains():
-            # Template residue is Ile 50, but it is not conserved
-            # we have to index it by number of residue, taking into account
-            # the offset if any
-            # we need residue 50 and not residue with resnum 50 (the 49th)
-            i = 0
-            for residue in chain.iterResidues():
-                if i == 49:
-                    break
-                i = i+1
+        pdb, pdb_path = tools.get_pdb(alignment["pdb"]["id"], 
+                                      parameters["pdb_preparation"]["load_selection"])
+        if not structure_filter.is_filtered(pdb):
+            alignment["rejected"] = False
+            tmp_path = os.path.join(parameters["global"]["structure_database"], 
+                                    os.path.basename(pdb_path))
+            os.remove(pdb_path)
              
-            residue_com = prody.calcCenter(residue)
+            curated_pdb = curate_struct(pdb, alignment)
              
-            # Identify closer water 
-            waters = pdb.select("name O and water").copy()
-            distances = numpy.sqrt(((residue_com - waters.getCoords())**2).sum(axis=1))
-             
-            min_dist = numpy.min(distances)
-            min_dist_index = numpy.where(distances == min_dist)
-            water_id = "%d:%s"%(waters.getResnums()[min_dist_index], waters.getChids()[min_dist_index][0])
-            # we use a dict in order to get rd of repeats
-            water_structs[water_id] = pdb.select("resnum %d"%waters.getResnums()[min_dist_index]).copy()
-         
-        prot_struct = pdb.select("protein").copy()
-        ligand_struct = pdb.select("hetero not water").copy()
-        tmp_struct = prot_struct + ligand_struct
-        alignment["pdb"]["waters"] = []
-        for water_id in water_structs:
-            # Keep track of added waters
-            alignment["pdb"]["waters"].append(water_id)
-            tmp_struct = tmp_struct + water_structs[water_id]
-         
-        prody.writePDB(tmp_path+".prot_lig_water", tmp_struct)
-    ####################################
+            prody.writePDB(tmp_path+".prot_lig_water", curated_pdb)
+        else:
+            os.remove(pdb_path)
+            alignment["rejected"] = True
     
     BlastpCommands.create_database_from_alignments(filtered_alignments,
                                                   parameters["blast_database_creation"])
-
+    save_json(filtered_alignments, 
+              parameters["alignments_file"])
     
+    log.write(datetime.now().strftime("Finished on %A, %d. %B %Y %I:%M%p\n"))
+    log.close()
     
     # TODO: PROCESS ALT LOCS? I NEED AN EXAMPLE
     # TODO: STORE AA NAME IN POS 50
