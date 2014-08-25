@@ -11,7 +11,7 @@ class ExactlyThisLengthFilter(object):
     
     @classmethod
     def filter(cls, alignments, seq_len):
-        return [alignment_info for alignment_info in alignments[0:5] if len(alignment_info["query_seq"]) == seq_len]
+        return [alignment_info for alignment_info in alignments if len(alignment_info["query_seq"]) == seq_len]
   
 class NoGapsFilter(object):
     
@@ -22,7 +22,10 @@ class NoGapsFilter(object):
     def filter(cls, alignments):
         return [alignment_info for alignment_info in alignments[0:5] if alignment_info["gaps"] == 0]
 
-class AlignmentFilter(object):
+class SequenceAlignmentFilter(object):
+    """
+    Alignment filters only use alignment information (e.g. sequence)
+    """
     def __init__(self):
         self.filters = []
     
@@ -37,4 +40,3 @@ class AlignmentFilter(object):
             else:
                 filtered_alignments = filter_class.filter(filtered_alignments, params)
         return filtered_alignments
-    

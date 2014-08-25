@@ -10,7 +10,7 @@ import numpy
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 import sys
 import json
-from hivprotmut.sequences.filters import AlignmentFilter, NoGapsFilter,\
+from hivprotmut.filters.sequences.filters import SequenceAlignmentFilter, NoGapsFilter,\
     ExactlyThisLengthFilter
 
 ###############################
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     
     print "Found %d alignments"%(len(alignments))
     # Get the ids of pdbs without gap (backbones must be equal)
-    al_filter = AlignmentFilter()
+    al_filter = SequenceAlignmentFilter()
     al_filter.add_filter(NoGapsFilter)
     al_filter.add_filter(ExactlyThisLengthFilter, 99)
     filtered_alignments = al_filter.filter(alignments)
