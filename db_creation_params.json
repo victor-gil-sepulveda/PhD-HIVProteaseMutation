@@ -30,7 +30,10 @@
 	********************************/
 	"blast_database_creation":{
        "new_database_name":"newdb",							// Name of the new DB
-       "database_title":"'Filtered HIV-like sequences DB'" 	// Title of the DB
+       "database_title":"'Filtered HIV-like sequences DB'", 	// Title of the DB
+       "segmasker_exe": "segmasker",
+       "makeblastdb_exe": "makeblastdb",
+       "blastdbcmnd_exe": "blastdbcmd"
 	}
 	
 }

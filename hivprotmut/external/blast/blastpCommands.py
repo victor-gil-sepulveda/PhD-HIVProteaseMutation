@@ -46,11 +46,15 @@ class BlastpCommands(object):
         fasta_db_handler.close()
             
         # Create new blast database
-        os.system("segmasker -in %s -infmt fasta -outfmt maskinfo_asn1_bin -parse_seqids -out %s"%(fasta_db_filename, mask_db_filename))
-        os.system("makeblastdb -in %s -dbtype prot -parse_seqids -mask_data %s -out %s -title %s"%(
+        os.system("%s -in %s -infmt fasta -outfmt maskinfo_asn1_bin -parse_seqids -out %s"%(
+                                                parameters["segmasker_exe"],
+                                                fasta_db_filename, 
+                                                mask_db_filename))
+        os.system("%s -in %s -dbtype prot -parse_seqids -mask_data %s -out %s -title %s"%(
+                                       parameters["makeblastdb_exe"],
                                        fasta_db_filename,
                                        mask_db_filename,
                                        parameters["new_database_name"],
                                        parameters["database_title"]))
         # Check
-        os.system("blastdbcmd -db %s -info"%parameters["new_database_name"])
+        os.system("%s -db %s -info"%parameters["new_database_name"])%(parameters["blastdbcmnd_exe"])    
