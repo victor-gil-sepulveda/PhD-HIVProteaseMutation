@@ -9,15 +9,24 @@ from hivprotmut.external.blast.blastOutputParser import BlastOutputParser
 import hivprotmut.tools as tools
 
 class BlastpCommands(object):
+    """
+    Namespace containing some blast related functions.
+    """
+
+    # This is an args template for a general blast query 
+    BLASTP_ARGS =  " -query %s -out %s  -db %s -max_target_seqs %d -outfmt 5"
 
     def __init__(self):
         pass
     
-    BLASTP_ARGS =  " -query %s -out %s  -db %s -max_target_seqs %d -outfmt 5"
-    
     @classmethod
     def find_closest_sequences(cls, query_fasta_file, parameters):
         """
+        Issues a blast command that queries a blast database in order to retrieve
+        alignments with the closest sequences.
+        
+        :param query_fasta_file: the path of the fasta file with the query sequence.
+        :param parameters: Dictionary holding the parameters.
         """
         command = "%s %s %s"%(parameters["exec"],
                               BlastpCommands.BLASTP_ARGS%(query_fasta_file, 
@@ -25,15 +34,14 @@ class BlastpCommands(object):
                                               parameters["search_db_name"], 
                                               parameters["max_target_sequences"]),
                               parameters["extra_args"])
-        print command
         os.system(command)
         parser = BlastOutputParser(parameters["blastp_output_file"], True)
         return parser.alignments
     
-    
     @classmethod
     def create_database_from_alignments(cls, alignments, parameters):
         """
+        Function-like script to create a 
         """
         
         fasta_db_filename =  "%s.fasta"%parameters["new_database_name"]
@@ -56,6 +64,11 @@ class BlastpCommands(object):
                                        mask_db_filename,
                                        parameters["new_database_name"],
                                        parameters["database_title"]))
+        # Check
+        os.system("%s -db %s -info"%(parameters["blastdbcmnd_exe"], 
+                                     parameters["new_database_name"])) 
+
+        # Move everything to a folder (if requested)
         if parameters["new_database_folder"] != "":
             tools.create_folder(parameters["new_database_folder"])
             os.system("mv %s.* %s"%(
@@ -63,6 +76,3 @@ class BlastpCommands(object):
                                     parameters["new_database_folder"])
                       )
                
-        # Check
-        os.system("%s -db %s -info"%(parameters["blastdbcmnd_exe"], 
-                                     parameters["new_database_name"])) 

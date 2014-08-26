@@ -18,7 +18,7 @@ def get_pdb(pdb_id, selection):
 
     :param pdb_id: A 4 letter pdb id
 
-    :return: The downloaded pdb data structure.
+    :return: The downloaded pdb prody data structure and the path to the downloaded file.
     """
     # Download pdb
     path = prody.fetchPDB(pdb_id, compressed=False)
@@ -31,6 +31,24 @@ def get_pdb(pdb_id, selection):
     # Delete all coordsets but coordset 0
     [pdb.delCoordset(1) for _ in range(1, number_of_models)]
     return pdb, path
+
+def get_all_ids_from_file(database_file_path):
+    """
+    Loads a file with PDB ids, filters and returns them
+
+    :param database_file_path: The path (and filename) of the text file.
+    :return:  An array containing the read ids.
+    """
+    database = open(database_file_path, "r")
+    all_ids = database.read()
+    all_ids = all_ids.split()
+    all_ids = filter(lambda x: len(x) == 4, all_ids)
+    all_ids = [all_ids[i].lower() for i in range(len(all_ids))]
+    return all_ids
+
+def get_all_ids_from_folder(folder):
+    contents = os.listdir(folder)
+    return dict([(x[0:4].lower(), x) for x in filter(lambda x: ".pdb" in x, contents)])
 
 def create_folder(directory_path, ensure_writability=False):
     """
@@ -84,8 +102,6 @@ def get_protein_sequence(pdb):
 
     @return: A string with the sequence of this protein.
     """
-    
-
     # One-liner just for the sake of the challenge
     return "".join([aa_dic_standard[resname] if resname in aa_dic_standard else "X" for resname in
                     [residue.getResname().lower() for residue in prody.HierView(pdb).iterResidues()]])

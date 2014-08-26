@@ -9,7 +9,7 @@ if __name__ == '__main__': # Compatibility with sphynx
 
     setup(
           name='HIVProteaseMutator',
-          version='0.1.0',
+          version='0.1.1',
           author='Victor Alejandro Gil Sepulveda',
           author_email='victor.gil.sepulveda@gmail.com',
           packages=[

@@ -1,0 +1,8 @@
+{
+	"blast_database":{
+				"path": "initial_struct_db",
+				"pdb_id_file": "HIV-1_Protease.PDBID.list",
+				"fasta" : "initial_struct_db.fas",
+				"download_selection": "all"
+	}
+}

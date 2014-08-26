@@ -5,15 +5,15 @@ Created on 13/8/2014
 """
 
 def sequence_iterator(sequence, max_chars):
-        """
-        Gets chunks of max_char from a sequence.
-        """
-        beginning = 0
-        ending = beginning + max_chars
-        while not beginning >= len(sequence):
-            yield sequence[beginning:ending]
-            beginning = ending
-            ending = min(beginning + max_chars, len(sequence))
+    """
+    Gets chunks of max_char from a sequence.
+    """
+    beginning = 0
+    ending = beginning + max_chars
+    while not beginning >= len(sequence):
+        yield sequence[beginning:ending]
+        beginning = ending
+        ending = min(beginning + max_chars, len(sequence))
 
 
 class FastaFile(object):

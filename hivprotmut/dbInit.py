@@ -17,15 +17,7 @@ from hivprotmut.structures.pdbcuration import curate_struct
 from hivprotmut.tools import save_json
 from datetime import datetime
 
-###############################
-### PREPROCESSING CONFIG
-MAX_ALLOWED_BEGINNING_GAPS = 3
-MAX_ALLOWED_ENDING_GAPS = 3
-###############################
-
-
 if __name__ == '__main__':
-    
     
     parameters = json.loads(tools.remove_comments(open(sys.argv[1]).read()))
 
@@ -69,18 +61,19 @@ if __name__ == '__main__':
             tmp_path = os.path.join(parameters["global"]["structure_database"], 
                                     os.path.basename(pdb_path))
             os.remove(pdb_path)
-             
             curated_pdb = curate_struct(pdb, alignment)
-             
             prody.writePDB(tmp_path+".prot_lig_water", curated_pdb)
         else:
             os.remove(pdb_path)
             alignment["rejected"] = True
+            log.write("PDB: %s not processed because it has a residue name in %s.\n"%(alignment["pdb"]["id"],
+                                                                                str(parameters["pdb_preparation"]["forbidden_residues"])))
+    
     
     BlastpCommands.create_database_from_alignments(filtered_alignments,
                                                   parameters["blast_database_creation"])
     save_json(filtered_alignments, 
-              parameters["alignments_file"])
+              parameters["blastp"]["alignments_file"])
     
     log.write(datetime.now().strftime("Finished on %A, %d. %B %Y %I:%M%p\n"))
     log.close()
@@ -93,5 +86,10 @@ if __name__ == '__main__':
     # Keep one water or two?
     # Ile 50 no siempre se conserva!
     # Mirar dist de centro de masas? o mejor de un atomo en concreto?
+    ###############################
+    ### PREPROCESSING CONFIG
+    # MAX_ALLOWED_BEGINNING_GAPS = 3
+    # MAX_ALLOWED_ENDING_GAPS = 3
+    ###############################
     
     
