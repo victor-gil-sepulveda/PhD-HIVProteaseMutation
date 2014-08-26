@@ -19,22 +19,18 @@ if __name__ == '__main__':
 
     # Download pdbs that we do not have in our db    
     fasta_handler = FastaFile.open(fasta_db_filename,"w")
-    ids_in_folder = tools.get_all_ids_from_folder(parameters["blast_database"]["structures"]["path"])
-    for id in tools.get_all_ids_from_file(parameters["blast_database"]["structures"]["pdb_id_file"]):
-        if id in ids_in_folder.keys():
-            # The pdb is already in a database created USING THIS SCRIPT
-            print "%s is already in the database."%id
-            pdb = prody.parsePDB(os.path.join(parameters["blast_database"]["structures"]["path"], 
-                                              ids_in_folder[id]))
-        else:
-            pdb, path = tools.get_pdb(id, parameters["blast_database"]["structures"]["download_selection"])
-            os.system("mv %s %s"%(path,
-                                  os.path.join(parameters["blast_database"]["structures"]["path"])))
+    for id in tools.get_all_ids_from_file(parameters["blast_database"]["structures"]["pdb_id_file"])[0:20]:
+        pdb, path = tools.get_pdb_from_remote_or_db(id, 
+                                                    parameters["blast_database"]["structures"]["download_selection"],
+                                                    parameters["blast_database"]["structures"]["path"])
         
         hw = prody.HierView(pdb.select("protein"))
         for chain in hw.iterChains():
             header = "%s:%s|PDBID|CHAIN|SEQUENCE"%(id, chain.getChid())
             fasta_handler.write(header, chain.getSequence())
+        
+        # Get rid of the pdb
+        os.system("rm %s"%path)
             
     fasta_handler.close()
     

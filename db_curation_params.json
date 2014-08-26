@@ -1,8 +1,8 @@
 
 {
 	"global":{
-		"structure_database": "db",
-		"log_name": "db_creation.log"
+		"curated_structure_database": "hiv1protease_curated_pdb",
+		"log_name": "db_curation.log"
 	},
 	
 	"query":{
@@ -15,13 +15,14 @@
 	    "extra_args": "",
 	    "blastp_output_file": "db_creation_blast_output.xml",
 	    "search_db_name": "hiv1protease_blastdb/hiv1protease",
-	    "max_target_sequences": 10, 			
+	    "max_target_sequences": 100, 			
 	    "alignments_file": "db_creation_blast_alignments.json"	
 	},
 	
 	"pdb_preparation": {
 		"load_selection": "all",
-		"forbidden_residues": ["478","017"]
+		"forbidden_residues": ["478","017"],
+		"structure_database_path": "hiv1protease_pdb"
 	},	
 	
 	"blast_database_creation":{

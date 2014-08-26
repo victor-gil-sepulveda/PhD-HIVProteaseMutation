@@ -13,6 +13,17 @@ class NoResiduesNamed(object):
             if residue_name in pdb.getResnames():
                 return True
         return False
+    
+class crystalHasLigandAndWater(object):
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def is_filtered(cls, pdb):
+        """
+        The structure must have ligand and waters
+        """
+        return pdb.select("hetero and not water") is None or pdb.select("water") is None 
         
 class StructureAlignmentFilter(object):
     """
@@ -26,11 +37,16 @@ class StructureAlignmentFilter(object):
     
     def is_filtered(self, pdb):
         filtered = True
+        failed = []
         
         for filter_class, params  in self.filters:
             if params is None:
-                filtered = filtered and filter_class.is_filtered(pdb)
+                not_ok = filter_class.is_filtered(pdb)
             else:
-                filtered = filtered and filter_class.is_filtered(pdb, params)
-        
-        return filtered
+                not_ok = filter_class.is_filtered(pdb, params)
+            
+            if not_ok:
+                failed.append(filter_class.__name__)
+            print "Filter: ",filter_class.__name__, not_ok
+            filtered = filtered and not_ok
+        return failed

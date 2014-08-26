@@ -32,6 +32,12 @@ def get_pdb(pdb_id, selection):
     [pdb.delCoordset(1) for _ in range(1, number_of_models)]
     return pdb, path
 
+def get_pdb_from_remote_or_db(pdb_id, selection, source_folder = ""):
+    """
+    """
+    prody.pathPDBFolder(source_folder)
+    return get_pdb(pdb_id, selection)
+
 def get_all_ids_from_file(database_file_path):
     """
     Loads a file with PDB ids, filters and returns them

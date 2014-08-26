@@ -44,8 +44,8 @@ class BlastpCommands(object):
         Function-like script to create a 
         """
         
-        fasta_db_filename =  "%s.fas"%parameters["new_database_name"]
-        mask_db_filename = "%s.asnb"%parameters["new_database_name"]
+        fasta_db_filename =  "%s.fas"%parameters["blast_database_name"]
+        mask_db_filename = "%s.asnb"%parameters["blast_database_name"]
         
         fasta_db_handler = FastaFile.open(fasta_db_filename)
         for alignment in alignments:

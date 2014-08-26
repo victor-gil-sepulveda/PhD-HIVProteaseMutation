@@ -4,7 +4,7 @@
 		Some global stuff
 	********************************/
 	"global":{
-		"structure_database": "db",							// Folder containing the downloaded structs.
+		"curated_structure_database": "db",							// Folder containing the downloaded structs.
 		"log_name": "db_creation.log"
 	},
 	
