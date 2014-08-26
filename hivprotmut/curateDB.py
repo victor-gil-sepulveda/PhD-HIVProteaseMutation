@@ -16,6 +16,7 @@ from hivprotmut.filters.structures.filters import StructureAlignmentFilter,\
 from hivprotmut.structures.pdbcuration import curate_struct
 from hivprotmut.tools import save_json
 from datetime import datetime
+from hivprotmut.sequences.fastaFile import FastaFile
 
 if __name__ == '__main__':
     
@@ -30,6 +31,11 @@ if __name__ == '__main__':
     ##########
     # Find alignments
     ##########
+    # Prepare fasta file with input sequence
+    input_fasta = FastaFile.open(parameters["query"]["fasta_file"])
+    input_fasta.write("QUERY", parameters["query"]["sequence"])
+    input_fasta.close()
+    # Use blast
     alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
                                                        parameters["blastp"])
     log.write("Found %d alignments\n"%(len(alignments)))

@@ -8,6 +8,14 @@
 		"log_name": "db_creation.log"
 	},
 	
+	"query":{
+		// Mutated with respect to "template" sequence.
+		//         X            X                                                        X
+		"sequence":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
+		
+		"fasta_file": 				"server_query.fasta"		// Name of the fasta file that will be created
+																// 		with the above sequence		
+	},
 	
 	/*******************************
 		How to do the initial 
@@ -38,8 +46,8 @@
 		one used by the server) 
 	********************************/
 	"blast_database_creation":{
-		"new_database_folder": "blast_db",
-       	"new_database_name":"new_blast_db",						// Name of the new DB
+		"blast_database_folder": "curated_hiv1protease_blastdb",
+       	"blast_database_name":"curated_hiv1protease",						// Name of the new DB
        	"database_title":"'Filtered HIV-like sequences DB'", 	// Title of the DB
        	"segmasker_exe": "segmasker",
        	"makeblastdb_exe": "makeblastdb",

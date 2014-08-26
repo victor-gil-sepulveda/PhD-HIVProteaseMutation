@@ -44,35 +44,39 @@ class BlastpCommands(object):
         Function-like script to create a 
         """
         
-        fasta_db_filename =  "%s.fasta"%parameters["new_database_name"]
+        fasta_db_filename =  "%s.fas"%parameters["new_database_name"]
         mask_db_filename = "%s.asnb"%parameters["new_database_name"]
+        
         fasta_db_handler = FastaFile.open(fasta_db_filename)
-
         for alignment in alignments:
             item_id = "%s_%s\n"%(alignment["pdb"]["id"], alignment["hit_chain"])
             fasta_db_handler.write(item_id, alignment["hit_seq__"])
         fasta_db_handler.close()
-            
+        
+        cls.create_database_from_fasta_file(fasta_db_filename, mask_db_filename, parameters)
+        
+    @classmethod
+    def create_database_from_fasta_file(cls, fasta_db_filename, mask_db_filename , parameters):       
         # Create new blast database
         os.system("%s -in %s -infmt fasta -outfmt maskinfo_asn1_bin -parse_seqids -out %s"%(
                                                 parameters["segmasker_exe"],
                                                 fasta_db_filename, 
                                                 mask_db_filename))
+        
         os.system("%s -in %s -dbtype prot -parse_seqids -mask_data %s -out %s -title %s"%(
                                        parameters["makeblastdb_exe"],
                                        fasta_db_filename,
                                        mask_db_filename,
-                                       parameters["new_database_name"],
+                                       parameters["blast_database_name"],
                                        parameters["database_title"]))
         # Check
         os.system("%s -db %s -info"%(parameters["blastdbcmnd_exe"], 
-                                     parameters["new_database_name"])) 
+                                     parameters["blast_database_name"])) 
 
         # Move everything to a folder (if requested)
-        if parameters["new_database_folder"] != "":
-            tools.create_folder(parameters["new_database_folder"])
+        if parameters["blast_database_folder"] != "":
+            tools.create_folder(parameters["blast_database_folder"])
             os.system("mv %s.* %s"%(
-                                    parameters["new_database_name"],
-                                    parameters["new_database_folder"])
+                                    parameters["blast_database_name"],
+                                    parameters["blast_database_folder"])
                       )
-               

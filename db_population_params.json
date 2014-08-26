@@ -1,0 +1,17 @@
+{
+	"blast_database":{
+		"structures":{
+			"path": "hiv1protease_pdb",
+			"download_selection": "all",
+			"pdb_id_file": "HIV-1_Protease.PDBID.list"
+		},
+		"blast":{		
+			"blast_database_name" : "hiv1protease",
+			"blast_database_folder" : "hiv1protease_blastdb",
+			"database_title":"'Initial HIV-1 protease blast db.'",
+	       	"segmasker_exe": "segmasker",
+	       	"makeblastdb_exe": "makeblastdb",
+	       	"blastdbcmnd_exe": "blastdbcmd"
+		}
+	}
+}
