@@ -55,7 +55,7 @@ if __name__ == '__main__':
     ##########
     # Curate structures
     ##########
-    id_exceptions = parameters["pdb_preparation"]["pdb_id_exceptions"]
+    id_exceptions = tools.get_ids_from_file(parameters["pdb_preparation"]["pdb_id_exceptions"])
     structure_filter = StructureAlignmentFilter()
     
     structure_filter.add_filter(CrystalHasLigandAndWater)

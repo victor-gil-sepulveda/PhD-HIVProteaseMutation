@@ -27,7 +27,7 @@
 	},	
 	
 	"blast_database_creation":{
-		"blast_database_folder": "curated_hiv1protease_blastdb",
+		"blast_database_folder": "hiv1protease_curated_blastdb",
        	"blast_database_name":"curated_hiv1protease",						
        	"database_title":"'Curated HIV-1 protease-like sequences DB'", 	
        	"segmasker_exe": "segmasker",

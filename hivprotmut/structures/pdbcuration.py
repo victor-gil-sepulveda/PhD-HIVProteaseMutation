@@ -54,9 +54,9 @@ def curate_struct(initial_pdb, pdb_alignment):
     prot_struct = initial_pdb.select("protein chain %s"%(" ".join(leave_chains))).copy()
     # Ligand and water can be missing in case of 'mandatory' files, so it is better to
     # check wheter if selections do anything 
-    ligand_struct = initial_pdb.select("hetero not water").copy()
+    ligand_struct = initial_pdb.select("hetero not water")
     if ligand_struct is not None:
-        tmp_struct = prot_struct + ligand_struct
+        tmp_struct = prot_struct + initial_pdb.select("hetero not water").copy()
     else:
         tmp_struct = prot_struct
         
