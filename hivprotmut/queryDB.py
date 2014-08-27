@@ -14,6 +14,9 @@ from hivprotmut.external.plop.plopCommands import PlopCommands
 from hivprotmut.mutation.pdbPseudoMutation import PdbPseudoMutation
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.external.proteinwizard.pwCommands import PWCommands
+import os
+import time
+import glob
 
 if __name__ == '__main__':
     # Read params
@@ -36,7 +39,7 @@ if __name__ == '__main__':
 
         # Get pdb path from structures DB
         pdb_id = alignments[0]["pdb"]["id"].lower()
-        processed_pdb_path = "%s.pdb.prot_lig_water"%pdb_id
+        processed_pdb_path = "%s.pdb"%pdb_id
         
         # "Mutate" pdb
         PdbPseudoMutation.process_pdb(mutations, 
@@ -50,8 +53,13 @@ if __name__ == '__main__':
         # Use prep wizard
         PWCommands.apply_protein_wizard(parameters["plop"]["output_file"], 
                                         parameters["protein_wizard"])
-        
-        
+
+        # Monitor the creation of the file
+        counter = 0
+        while len(glob.glob('*.recover')) != 0:
+            time.sleep(1)
+            counter = counter + 1
+
         # PDB is prepared for lig exploration!
         print "[SUCCESS] This is the created pdb: %s"%(parameters["protein_wizard"]["output_file"])
         
