@@ -1,4 +1,29 @@
+import prody
 
+class NumChainsIs(object):
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def is_filtered(cls, pdb, min_num_chains):
+        """
+        Checks if the structure has at least n proteic chains.
+        """
+        hw = prody.HierView(pdb.select("protein"))
+        return hw.numChains() == min_num_chains
+
+class EqualChainSequences(object):
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def is_filtered(cls, pdb):
+        """
+        Checks if the structure has at least n proteic chains.
+        """
+        hw = prody.HierView(pdb.select("protein"))
+        
+        return len(set([chain.getSequence() for chain in hw.iterChains()])) != 1
 
 class NoResiduesNamed(object):
     def __init__(self):
@@ -14,7 +39,7 @@ class NoResiduesNamed(object):
                 return True
         return False
     
-class crystalHasLigandAndWater(object):
+class CrystalHasLigandAndWater(object):
     def __init__(self):
         pass
     

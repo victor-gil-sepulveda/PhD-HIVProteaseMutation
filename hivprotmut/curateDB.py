@@ -12,7 +12,8 @@ import json
 from hivprotmut.filters.sequences.filters import SequenceAlignmentFilter, NoGapsFilter,\
     ExactlyThisLengthFilter, OnlyOneForEachChain
 from hivprotmut.filters.structures.filters import StructureAlignmentFilter,\
-    NoResiduesNamed, crystalHasLigandAndWater
+    NoResiduesNamed, CrystalHasLigandAndWater, EqualChainSequences,\
+    NumChainsIs
 from hivprotmut.structures.pdbcuration import curate_struct
 from hivprotmut.tools import save_json
 from datetime import datetime
@@ -59,12 +60,14 @@ if __name__ == '__main__':
     ##########    
     structure_filter = StructureAlignmentFilter()
     
-    structure_filter.add_filter(crystalHasLigandAndWater)
+    structure_filter.add_filter(CrystalHasLigandAndWater)
+    structure_filter.add_filter(NumChainsIs, 2)
+    structure_filter.add_filter(EqualChainSequences)
     structure_filter.add_filter(NoResiduesNamed, 
                                 parameters["pdb_preparation"]["forbidden_residues"])
     
     structure_db_path = parameters["pdb_preparation"]["structure_database_path"] if "structure_database_path" in parameters["pdb_preparation"] else ""
-    
+    log.write("While processing the structures:\n")
     for alignment in filtered_alignments:
         pdb, pdb_path = tools.get_pdb_from_remote_or_db(alignment["pdb"]["id"], 
                                       parameters["pdb_preparation"]["load_selection"],
@@ -77,15 +80,16 @@ if __name__ == '__main__':
                                     os.path.basename(pdb_path))
             
             curated_pdb = curate_struct(pdb, alignment)
-            prody.writePDB(tmp_path+".prot_lig_water", curated_pdb)
+            prody.writePDB(tmp_path, curated_pdb)
         else:
             alignment["rejected"] = True
-            log.write("PDB %s not processed because it has failed this filters: %s.\n"%(alignment["pdb"]["id"],
+            log.write("\t - PDB %s is not going to be stored because it has failed this filters: %s.\n"%(alignment["pdb"]["id"],
                                                                                 str(failed_filters)))
         
         if structure_db_path is not None:# We do not want to delete our database!
             os.remove(pdb_path)
     
+    # Blast DB creation
     BlastpCommands.create_database_from_alignments(filtered_alignments,
                                                   parameters["blast_database_creation"])
     save_json(filtered_alignments, 
@@ -93,19 +97,4 @@ if __name__ == '__main__':
     
     log.write(datetime.now().strftime("Finished on %A, %d. %B %Y %I:%M%p\n"))
     log.close()
-    
-    # TODO: PROCESS ALT LOCS? I NEED AN EXAMPLE
-    # TODO: STORE AA NAME IN POS 50
-    # TODO: FIND GAP EXAMPLE. 
-    # TODO: ADD TOLERANCE TO BEGINNING AND ENDING GAPS
-    
-    # Keep one water or two?
-    # Ile 50 no siempre se conserva!
-    # Mirar dist de centro de masas? o mejor de un atomo en concreto?
-    ###############################
-    ### PREPROCESSING CONFIG
-    # MAX_ALLOWED_BEGINNING_GAPS = 3
-    # MAX_ALLOWED_ENDING_GAPS = 3
-    ###############################
-    
     

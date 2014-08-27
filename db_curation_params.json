@@ -13,10 +13,10 @@
 	"blastp": {
 	    "exec": "blastp",
 	    "extra_args": "",
-	    "blastp_output_file": "db_creation_blast_output.xml",
+	    "blastp_output_file": "db_curation_blast_output.xml",
 	    "search_db_name": "hiv1protease_blastdb/hiv1protease",
-	    "max_target_sequences": 100, 			
-	    "alignments_file": "db_creation_blast_alignments.json"	
+	    "max_target_sequences": 1000, 			
+	    "alignments_file": "db_curation_blast_alignments.json"	
 	},
 	
 	"pdb_preparation": {

@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # Download pdbs that we do not have in our db    
     fasta_handler = FastaFile.open(fasta_db_filename,"w")
-    for id in tools.get_all_ids_from_file(parameters["blast_database"]["structures"]["pdb_id_file"])[0:20]:
+    for id in tools.get_all_ids_from_file(parameters["blast_database"]["structures"]["pdb_id_file"]):
         pdb, path = tools.get_pdb_from_remote_or_db(id, 
                                                     parameters["blast_database"]["structures"]["download_selection"],
                                                     parameters["blast_database"]["structures"]["path"])
