@@ -22,7 +22,7 @@ class NoGapsFilter(object):
     def filter(cls, alignments):
         return [alignment_info for alignment_info in alignments if alignment_info["gaps"] == 0]
     
-class OnlyOneForEachChain(object):
+class OnlyOneAlignmentPerStructure(object):
     
     def __init__(self):
         pass

@@ -19,14 +19,14 @@ if __name__ == '__main__':
 
     # Download pdbs that we do not have in our db    
     fasta_handler = FastaFile.open(fasta_db_filename,"w")
-    for id in tools.get_all_ids_from_file(parameters["blast_database"]["structures"]["pdb_id_file"]):
-        pdb, path = tools.get_pdb_from_remote_or_db(id, 
+    for pdb_id in tools.get_ids_from_file_list(parameters["blast_database"]["structures"]["pdb_id_files"]):
+        pdb, path = tools.get_pdb_from_remote_or_db(pdb_id, 
                                                     parameters["blast_database"]["structures"]["download_selection"],
                                                     parameters["blast_database"]["structures"]["path"])
         
         hw = prody.HierView(pdb.select("protein"))
         for chain in hw.iterChains():
-            header = "%s:%s|PDBID|CHAIN|SEQUENCE"%(id, chain.getChid())
+            header = "%s:%s|PDBID|CHAIN|SEQUENCE"%(pdb_id, chain.getChid())
             fasta_handler.write(header, chain.getSequence())
         
         # Get rid of the pdb

@@ -38,6 +38,13 @@ def get_pdb_from_remote_or_db(pdb_id, selection, source_folder = ""):
     prody.pathPDBFolder(source_folder)
     return get_pdb(pdb_id, selection)
 
+def get_all_ids_from_file_handler(database_file_handler):
+    all_ids = remove_comments(database_file_handler.read())
+    all_ids = all_ids.split()
+    all_ids = filter(lambda x: len(x) == 4, all_ids)
+    all_ids = set([one_id.lower() for one_id in all_ids])
+    return list(all_ids)
+
 def get_all_ids_from_file(database_file_path):
     """
     Loads a file with PDB ids, filters and returns them
@@ -46,11 +53,15 @@ def get_all_ids_from_file(database_file_path):
     :return:  An array containing the read ids.
     """
     database = open(database_file_path, "r")
-    all_ids = database.read()
-    all_ids = all_ids.split()
-    all_ids = filter(lambda x: len(x) == 4, all_ids)
-    all_ids = [all_ids[i].lower() for i in range(len(all_ids))]
+    all_ids = get_all_ids_from_file_handler(database)
+    database.close()
     return all_ids
+
+def get_ids_from_file_list(file_list):
+    all_ids = []
+    for file_path in file_list:
+        all_ids.extend(get_all_ids_from_file(file_path))
+    return list(set(all_ids))
 
 def get_all_ids_from_folder(folder):
     contents = os.listdir(folder)
@@ -86,8 +97,8 @@ def remove_comments(string):
     Removes /**/ and // comments from a string (used with the control script).
     From http://stackoverflow.com/questions/2319019/using-regex-to-remove-comments-from-source-files
     """
-    string = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,string) # remove all occurance streamed comments (/*COMMENT */) from string
-    string = re.sub(re.compile("//.*?\n" ) ,"" ,string) # remove all occurance singleline comments (//COMMENT\n ) from string
+    string = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,string) 
+    string = re.sub(re.compile("//.*?\n" ) ,"\n" ,string)
     return string
 
 

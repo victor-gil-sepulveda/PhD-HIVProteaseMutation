@@ -4,20 +4,19 @@ Created on 12/8/2014
 @author: victor
 """
 import os
-import hivprotmut.tools as tools
 import prody
-from hivprotmut.external.blast.blastpCommands import BlastpCommands
 import sys
 import json
+from datetime import datetime
+import hivprotmut.tools as tools
+from hivprotmut.sequences.fastaFile import FastaFile
+from hivprotmut.structures.pdbcuration import curate_struct
+from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.filters.sequences.filters import SequenceAlignmentFilter, NoGapsFilter,\
-    ExactlyThisLengthFilter, OnlyOneForEachChain
+    ExactlyThisLengthFilter, OnlyOneAlignmentPerStructure
 from hivprotmut.filters.structures.filters import StructureAlignmentFilter,\
     NoResiduesNamed, CrystalHasLigandAndWater, EqualChainSequences,\
-    NumChainsIs
-from hivprotmut.structures.pdbcuration import curate_struct
-from hivprotmut.tools import save_json
-from datetime import datetime
-from hivprotmut.sequences.fastaFile import FastaFile
+    NumChainsIs, NumChainsIsAtLeast
 
 if __name__ == '__main__':
     
@@ -28,7 +27,6 @@ if __name__ == '__main__':
     
     tools.create_folder(parameters["global"]["curated_structure_database"])
     
-
     ##########
     # Find alignments
     ##########
@@ -48,20 +46,20 @@ if __name__ == '__main__':
     al_filter = SequenceAlignmentFilter()
     al_filter.add_filter(NoGapsFilter)
     al_filter.add_filter(ExactlyThisLengthFilter, 99)
-    al_filter.add_filter(OnlyOneForEachChain)
+    al_filter.add_filter(OnlyOneAlignmentPerStructure)
     filtered_alignments = al_filter.filter(alignments)
     # IMPROVEMENT : LEAVE STRUCTURES WHERE THE GAPS ARE AT THE BEGGINING OR THE END TO SOME EXTENT
     # we need to store the offset
     log.write("We have filtered %d structures because of their sequence features.\n"%(len(alignments) - len(filtered_alignments)))
     
-
     ##########
     # Curate structures
-    ##########    
+    ##########
     structure_filter = StructureAlignmentFilter()
     
     structure_filter.add_filter(CrystalHasLigandAndWater)
-    structure_filter.add_filter(NumChainsIs, 2)
+    #structure_filter.add_filter(NumChainsIs, 2)
+    structure_filter.add_filter(NumChainsIsAtLeast, 2)
     structure_filter.add_filter(EqualChainSequences)
     structure_filter.add_filter(NoResiduesNamed, 
                                 parameters["pdb_preparation"]["forbidden_residues"])
@@ -92,9 +90,8 @@ if __name__ == '__main__':
     # Blast DB creation
     BlastpCommands.create_database_from_alignments(filtered_alignments,
                                                   parameters["blast_database_creation"])
-    save_json(filtered_alignments, 
+    tools.save_json(filtered_alignments, 
               parameters["blastp"]["alignments_file"])
     
     log.write(datetime.now().strftime("Finished on %A, %d. %B %Y %I:%M%p\n"))
     log.close()
-    

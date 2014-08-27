@@ -10,9 +10,9 @@ import sys
 import json
 from hivprotmut import tools
 from hivprotmut.sequences.fastaFile import FastaFile
-from hivprotmut.external.blast.blastpCommands import BlastpCommands
-from hivprotmut.mutation.pdbPseudoMutation import PdbPseudoMutation
 from hivprotmut.external.plop.plopCommands import PlopCommands
+from hivprotmut.mutation.pdbPseudoMutation import PdbPseudoMutation
+from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.external.proteinwizard.pwCommands import PWCommands
 
 if __name__ == '__main__':

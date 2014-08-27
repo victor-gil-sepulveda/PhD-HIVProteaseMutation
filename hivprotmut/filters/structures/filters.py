@@ -12,6 +12,19 @@ class NumChainsIs(object):
         hw = prody.HierView(pdb.select("protein"))
         return hw.numChains() == min_num_chains
 
+class NumChainsIsAtLeast(object):
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def is_filtered(cls, pdb, min_num_chains):
+        """
+        Checks if the structure has at least n proteic chains.
+        """
+        hw = prody.HierView(pdb.select("protein"))
+        return hw.numChains() < min_num_chains
+
+
 class EqualChainSequences(object):
     def __init__(self):
         pass

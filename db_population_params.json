@@ -3,7 +3,8 @@
 		"structures":{
 			"path": "hiv1protease_pdb",
 			"download_selection": "all",
-			"pdb_id_file": "HIV-1_Protease.PDBID.list"
+			"pdb_id_files": ["HIV-1_Protease.PDB.list", 
+							 "HIV-1_Protease.mandatory.list"]
 		},
 		"blast":{		
 			"blast_database_name" : "hiv1protease",
