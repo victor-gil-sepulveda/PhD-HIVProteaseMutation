@@ -52,8 +52,14 @@ def curate_struct(initial_pdb, pdb_alignment):
         water_structs[water_id] = initial_pdb.select("resnum %d"%waters.getResnums()[min_dist_index]).copy()
     
     prot_struct = initial_pdb.select("protein chain %s"%(" ".join(leave_chains))).copy()
+    # Ligand and water can be missing in case of 'mandatory' files, so it is better to
+    # check wheter if selections do anything 
     ligand_struct = initial_pdb.select("hetero not water").copy()
-    tmp_struct = prot_struct + ligand_struct
+    if ligand_struct is not None:
+        tmp_struct = prot_struct + ligand_struct
+    else:
+        tmp_struct = prot_struct
+        
     pdb_alignment["pdb"]["waters"] = []
     for water_id in water_structs:
         # Keep track of added waters

@@ -55,6 +55,7 @@ if __name__ == '__main__':
     ##########
     # Curate structures
     ##########
+    id_exceptions = parameters["pdb_preparation"]["pdb_id_exceptions"]
     structure_filter = StructureAlignmentFilter()
     
     structure_filter.add_filter(CrystalHasLigandAndWater)
@@ -72,7 +73,7 @@ if __name__ == '__main__':
                                       structure_db_path)
         
         failed_filters = structure_filter.is_filtered(pdb)
-        if len(failed_filters) == 0:
+        if len(failed_filters) == 0 or alignment["pdb"]["id"] in id_exceptions:
             alignment["rejected"] = False
             tmp_path = os.path.join(parameters["global"]["curated_structure_database"], 
                                     os.path.basename(pdb_path))

@@ -22,7 +22,8 @@
 	"pdb_preparation": {
 		"load_selection": "all",
 		"forbidden_residues": ["478", "017"],
-		"structure_database_path": "hiv1protease_pdb"
+		"structure_database_path": "hiv1protease_pdb",
+		"pdb_id_exceptions": "HIV-1_Protease.mandatory.list"
 	},	
 	
 	"blast_database_creation":{
