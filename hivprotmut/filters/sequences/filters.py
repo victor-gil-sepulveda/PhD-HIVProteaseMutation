@@ -40,9 +40,11 @@ class OnlyOneAlignmentPerStructure(object):
                 already_seen_ids.append(pdb_id)
                 filtered.append(alignment_info)
         return filtered
+    
 class SequenceAlignmentFilter(object):
     """
-    Alignment filters only use alignment information (e.g. sequence)
+    Alignment filters only use alignment information (e.g. sequence). Applies all the added filters to 
+    an alignment collection.
     """
     def __init__(self):
         self.filters = []

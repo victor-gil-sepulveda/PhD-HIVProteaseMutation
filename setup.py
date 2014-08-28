@@ -5,11 +5,11 @@ Created on 14/8/2014
 """
 
 if __name__ == '__main__': # Compatibility with sphynx
-    from distutils.core import setup
+    from setuptools import setup
 
     setup(
           name='HIVProteaseMutator',
-          version='0.2.0',
+          version='0.3.0',
           author='Victor Alejandro Gil Sepulveda',
           author_email='victor.gil.sepulveda@gmail.com',
           packages=[

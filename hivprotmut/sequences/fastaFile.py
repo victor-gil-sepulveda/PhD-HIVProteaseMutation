@@ -17,16 +17,23 @@ def sequence_iterator(sequence, max_chars):
 
 
 class FastaFile(object):
-    
+    """
+    Abstraction of a fasta/multifasta file that mimicks a python file.
+    """
     def __init__(self):
         pass
     
     @classmethod
-    def open(cls, filename, mode = "w"): 
+    def open(cls, filename, mode = "w"):
         handler = open(filename, mode)
         return FastaFileHandler(handler)
         
 class FastaFileHandler(object):
+    """
+    A handler that allows to write sequences in fasta format. More than one sequence
+    can be written in the same handler until it is closed.
+    """
+    
     MAX_COLUMNS = 80 
     
     def __init__(self, handler):

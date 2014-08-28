@@ -1,0 +1,18 @@
+{
+
+	"output":"HIV-1_Protease.blast.list",
+	
+	"query":{
+		"sequence":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
+		"fasta_file": "HIV.fasta"			
+	},
+	
+	"blastp": {
+	    "exec": "blastp",
+	    "extra_args": "-remote",
+	    "search_db_name": "pdbaa",
+	    "max_target_sequences": 1000, 			
+	    "blastp_output_file": "db_curation_blast_output.xml",
+	    "alignments_file": "db_curation_blast_alignments.json"	
+	}
+}

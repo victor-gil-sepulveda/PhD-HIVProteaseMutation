@@ -1,18 +1,31 @@
 {
-	"blast_database":{
-		"structures":{
-			"path": "hiv1protease_pdb",
-			"download_selection": "all",
-			"pdb_id_files": ["HIV-1_Protease.PDB.list", 
-							 "HIV-1_Protease.mandatory.list"]
-		},
-		"blast":{		
-			"blast_database_name" : "hiv1protease",
-			"blast_database_folder" : "hiv1protease_blastdb",
-			"database_title":"'Initial HIV-1 protease blast db.'",
-	       	"segmasker_exe": "segmasker",
-	       	"makeblastdb_exe": "makeblastdb",
-	       	"blastdbcmnd_exe": "blastdbcmd"
-		}
+
+	/*******************************
+		This section tells the 
+		script where to find
+		the ids of the pdbs that
+		will be used for the 
+		initial db population.
+	*******************************/
+	"structures":{
+		"path": "hiv1protease_pdb",							// Structural database folder will have this name
+		"download_selection": "all",						// Prody selection that will be immediately applied upon
+															// structure loading.
+		"pdb_id_files": ["HIV-1_Protease.PDB.list", 		// An array with list id folders (See this examples).
+						 "HIV-1_Protease.mandatory.list"]    
+	},
+	
+	/*********************************************
+		See db_curation_params_remote_blast.json
+		for a commented version
+		of this section.
+	**********************************************/
+	"blast":{		
+		"blast_database_name" : "hiv1protease",					
+		"blast_database_folder" : "hiv1protease_blastdb",
+		"database_title":"'Initial HIV-1 protease blast db.'",
+       	"segmasker_exe": "segmasker",
+       	"makeblastdb_exe": "makeblastdb",
+       	"blastdbcmnd_exe": "blastdbcmd"
 	}
 }

@@ -35,7 +35,7 @@ if __name__ == '__main__':
     input_fasta.write("QUERY", parameters["query"]["sequence"])
     input_fasta.close()
     # Use blast
-    alignments = BlastpCommands.find_closest_sequences("HIV.fasta", 
+    alignments = BlastpCommands.find_closest_sequences(parameters["query"]["fasta_file"], 
                                                        parameters["blastp"])
     log.write("Found %d alignments\n"%(len(alignments)))
     

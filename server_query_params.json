@@ -20,10 +20,10 @@
 	"blastp": {
 	    "exec": 				"blastp", 						// The blast executable (whole path if needed)
 	    "extra_args": 			"", 							// Nothing in this case
-	    "blastp_output_file": 	"query_alignment.xml", 				// Name of the blast output file
+	    "blastp_output_file": 	"query_alignment.xml", 			// Name of the blast output file
 	    "search_db_name": 		"hiv1protease_curated_blastdb/curated_hiv1protease", 						// This must be the db we created with dbInit
 	    "max_target_sequences": 1 , 							// Maximum number of alignments to get
-	    "alignments_file": 		"query_alignment.json"				// Name of the filtered output json file
+	    "alignments_file": 		"query_alignment.json"			// Name of the filtered output json file
 				    											// 		containing the details about the alignments.
 	},
 	

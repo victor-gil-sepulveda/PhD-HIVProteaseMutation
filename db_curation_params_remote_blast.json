@@ -4,17 +4,19 @@
 		Some global stuff
 	********************************/
 	"global":{
-		"curated_structure_database": "db",							// Folder containing the downloaded structs.
-		"log_name": "db_creation.log"
+		"curated_structure_database": "db",		// Folder containing the downloaded structs.
+		"log_name": "db_creation.log"			// Name of the log file
 	},
 	
 	"query":{
-		// Mutated with respect to "template" sequence.
+		// Mutated with respect to "template" sequence (There is an X in the residues that were changed
+		with respect to template).
 		//         X            X                                                        X
 		"sequence":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
-		
 		"fasta_file": 				"server_query.fasta"		// Name of the fasta file that will be created
-																// 		with the above sequence		
+																// with the above sequence. If sequence 
+																// is not defined, then is directly the name
+																// of the file containing the sequence.
 	},
 	
 	/*******************************
@@ -27,17 +29,17 @@
 	    "blastp_output_file": "sequences.xml", 	// Name of the blast output file
 	    "search_db_name": "pdbaa", 				// Name (or place) of the database to query
 	    "max_target_sequences": 10, 			// Maximum number of alignments to get
-	    "alignments_file": "alignments.json"	// Name of the filtered output json file
-	    										// 		containing the details about the alignments.
+	    "alignments_file": "alignments.json"	// Name of the processed and filtered output json file
 	},
 	
 	/*******************************
 		How to prepare the pdbs.
 	********************************/
 	"pdb_preparation": {
-		"load_selection": "all",
-		"forbidden_residues": ["478","017"]
-	
+		"load_selection": "all",				// Prody selection that will be immediately applied upon
+												// structure loading. 
+		"forbidden_residues": ["478","017"]		// Residue names that cannot be present in the structure
+												// (in this case two igand names we prefer to avoid)
 	},	
 	
 	/*******************************
@@ -46,12 +48,15 @@
 		one used by the server) 
 	********************************/
 	"blast_database_creation":{
-		"blast_database_folder": "curated_hiv1protease_blastdb",
-       	"blast_database_name":"curated_hiv1protease",						// Name of the new DB
-       	"database_title":"'Filtered HIV-like sequences DB'", 	// Title of the DB
-       	"segmasker_exe": "segmasker",
-       	"makeblastdb_exe": "makeblastdb",
-       	"blastdbcmnd_exe": "blastdbcmd"
+		"blast_database_folder": "curated_hiv1protease_blastdb", // The name of the folder where the
+																 // blast database that will be created 
+																 // with the sequences of the "curated" 
+																 // structures resides.
+       	"blast_database_name":"curated_hiv1protease",			 // Name of the new DB.
+       	"database_title":"'Filtered HIV-like sequences DB'", 	 // Short title of the DB.
+       	"segmasker_exe": "segmasker",							 // Path for blastp's "segmasker" program
+       	"makeblastdb_exe": "makeblastdb",						 // Path for blastp's "makeblastdb" program
+       	"blastdbcmnd_exe": "blastdbcmd"							 // Path for blastp's "blastdbcmd" program
 	}
 	
 }
