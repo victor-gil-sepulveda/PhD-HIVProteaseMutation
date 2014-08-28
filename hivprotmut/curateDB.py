@@ -88,7 +88,7 @@ if __name__ == '__main__':
             log.write("\t - PDB %s is not going to be stored because it has failed this filters: %s.\n"%(alignment["pdb"]["id"],
                                                                                 str(failed_filters)))
         
-        if structure_db_path is not None:# We do not want to delete our database!
+        if structure_db_path is not None: # We do not want to delete our database!
             os.remove(pdb_path)
     
     # Blast DB creation

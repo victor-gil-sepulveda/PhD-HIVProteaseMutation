@@ -7,8 +7,9 @@
 		//         X            X                                                        X
 		"sequence":"PQLTLWQRPLVTIKICGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAILTVLVGPTPVNIIGRNLLTQIGCTLNF",
 		
-		"fasta_file": 				"server_query.fasta"		// Name of the fasta file that will be created
-																// 		with the above sequence		
+		"fasta_file": 				"server_query.fasta",		// Name of the fasta file that will be created
+																// 		with the above sequence
+		"ligand": "amp"	
 	},
 	
 	/*******************************
@@ -55,7 +56,7 @@
 	"protein_wizard":{
 		"exec": "$SCHRODINGER/utilities/prepwizard",			// PW executable (whole path if needed)
 		"max_monitoring_seconds":10,
-		"options": "-noimpref -fix", 							// Options for prot wizard
+		"options": "-WAIT -noimpref -fix", 							// Options for prot wizard
 		"output_file": "final.pdb"								// File name of The Final PDB!!!
 	}
 }

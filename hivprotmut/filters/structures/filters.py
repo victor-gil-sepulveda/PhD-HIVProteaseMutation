@@ -5,7 +5,7 @@ class NumChainsIs(object):
         pass
     
     @classmethod
-    def is_filtered(cls, pdb, num_chains):
+    def must_be_filtered(cls, pdb, num_chains):
         """
         Checks if the structure has at least n proteic chains.
         """
@@ -17,7 +17,7 @@ class NumChainsIsAtLeast(object):
         pass
     
     @classmethod
-    def is_filtered(cls, pdb, min_num_chains):
+    def must_be_filtered(cls, pdb, min_num_chains):
         """
         Checks if the structure has at least n proteic chains.
         """

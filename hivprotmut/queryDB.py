@@ -3,7 +3,8 @@ Created on 13/8/2014
 
 :author: victor
 
-:brief: Given a query compares the sequences with the ones in our database and generates the mutant
+:brief: Given a query compares the sequences with the ones in our database and generates a "mutant"
+structure using the closer structure as template.
 """
 
 import sys
