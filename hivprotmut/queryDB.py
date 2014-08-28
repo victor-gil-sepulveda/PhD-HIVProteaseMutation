@@ -17,6 +17,7 @@ from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.external.proteinwizard.pwCommands import PWCommands
 import time
 import glob
+import os
 
 if __name__ == '__main__':
     # Read params
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
         # Get pdb path from structures DB
         pdb_id = alignments[0]["pdb"]["id"].lower()
-        processed_pdb_path = "%s.pdb"%pdb_id
+        processed_pdb_path = os.path.join(parameters["query"]["ligand"],"%s.pdb"%pdb_id)
         
         # "Mutate" pdb
         PdbPseudoMutation.process_pdb(mutations, 
