@@ -7,63 +7,92 @@ Created on 25/8/2014
 import prody
 import numpy
 
-def curate_struct(initial_pdb, pdb_alignment):
+def choose_main_chains(initial_pdb):
     """
-    Returns the "curated" pdb.
+    We can have complexes attached to the chain or even duplicated chains
+    that cover the same space (ex. in the same model, A and B are one structure
+    and C and B form a duplicated protein). We only have to leave two of that 
+    main chains, and that's what this function does :) .
+    
+    :param initial_pdb: The pdb (prody structure) we want to extract the chains.
+    
+    :return: An array containing the chain ids of the main chains.
+    """
+    hw = prody.HierView(initial_pdb.select("protein"))
+    chain_lengths = []
+    for chain in hw.iterChains():
+        chain_lengths.append((len(chain.getSequence()), chain.getChid())) 
+    
+    leave_chains = sorted(chain_lengths)[-2:]
+    leave_chains = [chain_id for _, chain_id in leave_chains]
+    return leave_chains
+
+def process_water_structures(initial_pdb, main_chains ):
+    """
+    Detects the waters we have to keep (important for the simulation) and returns 
+    a structure holding them.
+    Important waters are the ones closer to Template residue 50(Ile), the aa is not 
+    but it is not guaranteed to be conserved, which means we have to rely into the 
+    residue number to choose it, and take any offset into account if needed.
+    
+    :param initial_pdb: The pdb (prody structure) we want to extract the chains.
+    
+    :return: A dictionary indexed by the water id (res. num. + chain id) holding the prody pdb
+    structure of that water.
+    """
+    hw = prody.HierView(initial_pdb.select("protein"))
+    water_structs = {}
+    for chain in hw.iterChains():
+        if chain.getChid() in main_chains:
+            # We cannot do a direct selection, instead we iterate
+            for i, residue in enumerate(chain.iterResidues()):
+                if i == 50: # 50th residue
+                    break
+            
+            residue_com = prody.calcCenter(residue)
+            
+            # Identify closer water 
+            waters = initial_pdb.select("name O and water")
+            if waters is not None:
+                distances = numpy.sqrt(((residue_com - waters.getCoords())**2).sum(axis=1))
+                
+                min_dist = numpy.min(distances)
+                min_dist_index = numpy.where(distances == min_dist)
+                water_id = "%d:%s"%(waters.getResnums()[min_dist_index], waters.getChids()[min_dist_index][0])
+                # We use a dict in order to get rid of repeats
+                water_structs[water_id] = initial_pdb.water.select("resnum %d"%waters.getResnums()[min_dist_index]).copy()
+    return water_structs
+
+def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
+    """
+    Returns the "curated" pdb. A curated pdb has potentially 2 waters around residue 
+    50 of each chain, a ligand and two main (symmetric) chains; everything else must be 
+    deleted. This function will work even in the case that the 2 later are not present, 
+    which can happen when processing any of the "mandatory" structures (those can pass 
+    the filters automatically).
+    
+    :param initial_pdb: The prody pdb structure we want to extract the chains.
+    
+    :return: The "curated" pdb.
     """
     # Get chain info (without ligand or waters)
     hw = prody.HierView(initial_pdb.select("protein"))
-     
     pdb_alignment["pdb"]["num_chains"] = hw.numChains()
-    chain_lengths = []
-    for chain in hw.iterChains():
-        pdb_alignment["pdb"]["chain_"+chain.getChid()] = chain.getSequence()
-        chain_lengths.append((len(chain.getSequence()), chain.getChid())) 
+
+    # Pick main chains
+    prot_struct = initial_pdb.select("protein chain %s"%(" ".join(main_chains))).copy()
     
-    # Sometimes we have complexes attached to the chain, sometimes we have
-    # more than 2 chain description even if they cover the same space
-    # We only have to leave two of that chains.
-    leave_chains = sorted(chain_lengths)[0:2]
-    leave_chains = [chain_id for _, chain_id in leave_chains]
-    
-    # Detect important waters and keep them
-    water_structs = {}
-    for chain in hw.iterChains():
-        # Template residue is Ile 50, but it is not conserved
-        # we have to index it by number of residue, taking into account
-        # the offset if any
-        # we need residue 50 and not residue with resnum 50 (the 49th)
-        i = 0
-        for residue in chain.iterResidues():
-            if i == 49:
-                break
-            i = i+1
-        
-        residue_com = prody.calcCenter(residue)
-        
-        # Identify closer water 
-        waters = initial_pdb.select("name O and water").copy()
-        distances = numpy.sqrt(((residue_com - waters.getCoords())**2).sum(axis=1))
-        
-        min_dist = numpy.min(distances)
-        min_dist_index = numpy.where(distances == min_dist)
-        water_id = "%d:%s"%(waters.getResnums()[min_dist_index], waters.getChids()[min_dist_index][0])
-        # we use a dict in order to get rid of repeats
-        water_structs[water_id] = initial_pdb.select("resnum %d"%waters.getResnums()[min_dist_index]).copy()
-    
-    prot_struct = initial_pdb.select("protein chain %s"%(" ".join(leave_chains))).copy()
-    # Ligand and water can be missing in case of 'mandatory' files, so it is better to
-    # check wheter if selections do anything 
+    # Add the ligand (if found)
     ligand_struct = initial_pdb.select("hetero not water")
-    if ligand_struct is not None:
-        tmp_struct = prot_struct + initial_pdb.select("hetero not water").copy()
+    if ligand_struct is not None and ligand_struct.numAtoms() >= parameters["min_ligand_atoms"]:
+        tmp_struct = prot_struct + ligand_struct.copy()
     else:
         tmp_struct = prot_struct
-        
-    pdb_alignment["pdb"]["waters"] = []
+    
+    # Add "important" waters, if found
+    water_structs = process_water_structures(initial_pdb, main_chains)
+    pdb_alignment["pdb"]["waters"] = water_structs.keys() # Keep track of added waters in the alignment file
     for water_id in water_structs:
-        # Keep track of added waters
-        pdb_alignment["pdb"]["waters"].append(water_id)
         tmp_struct = tmp_struct + water_structs[water_id]
     
     return tmp_struct

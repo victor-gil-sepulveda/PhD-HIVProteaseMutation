@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 import hivprotmut.tools as tools
 from hivprotmut.sequences.fastaFile import FastaFile
-from hivprotmut.structures.pdbcuration import curate_struct
+from hivprotmut.structures.pdbcuration import curate_struct, choose_main_chains
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.filters.sequences.filters import SequenceAlignmentFilter, NoGapsFilter,\
     ExactlyThisLengthFilter, OnlyOneAlignmentPerStructure
@@ -58,27 +58,30 @@ if __name__ == '__main__':
     id_exceptions = tools.get_ids_from_file(parameters["pdb_preparation"]["pdb_id_exceptions"])
     structure_filter = StructureAlignmentFilter()
     
-    structure_filter.add_filter(CrystalHasLigandAndWater)
-    #structure_filter.add_filter(NumChainsIs, 2)
-    structure_filter.add_filter(NumChainsIsAtLeast, 2)
-    structure_filter.add_filter(EqualChainSequences)
+    structure_filter.add_filter(CrystalHasLigandAndWater, 
+                                parameters["pdb_preparation"]["min_ligand_atoms"])
+    structure_filter.add_filter(NumChainsIs, 2)
+#     structure_filter.add_filter(NumChainsIsAtLeast, 2)
+    structure_filter.add_filter(EqualChainSequences) 
     structure_filter.add_filter(NoResiduesNamed, 
                                 parameters["pdb_preparation"]["forbidden_residues"])
     
     structure_db_path = parameters["pdb_preparation"]["structure_database_path"] if "structure_database_path" in parameters["pdb_preparation"] else ""
     log.write("While processing the structures:\n")
     for alignment in filtered_alignments:
+#         if alignment["pdb"]["id"] in ["1ytg","3d3t"]:
         pdb, pdb_path = tools.get_pdb_from_remote_or_db(alignment["pdb"]["id"], 
                                       parameters["pdb_preparation"]["load_selection"],
                                       structure_db_path)
         
-        failed_filters = structure_filter.is_filtered(pdb)
+        main_chains = choose_main_chains(pdb)
+        curated_pdb = curate_struct(pdb, main_chains, alignment, parameters["pdb_preparation"])
+
+        failed_filters = structure_filter.must_be_filtered(curated_pdb)
         if len(failed_filters) == 0 or alignment["pdb"]["id"] in id_exceptions:
             alignment["rejected"] = False
             tmp_path = os.path.join(parameters["global"]["curated_structure_database"], 
                                     os.path.basename(pdb_path))
-            
-            curated_pdb = curate_struct(pdb, alignment)
             prody.writePDB(tmp_path, curated_pdb)
         else:
             alignment["rejected"] = True

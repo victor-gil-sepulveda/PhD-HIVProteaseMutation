@@ -14,7 +14,6 @@ from hivprotmut.external.plop.plopCommands import PlopCommands
 from hivprotmut.mutation.pdbPseudoMutation import PdbPseudoMutation
 from hivprotmut.external.blast.blastpCommands import BlastpCommands
 from hivprotmut.external.proteinwizard.pwCommands import PWCommands
-import os
 import time
 import glob
 
@@ -22,10 +21,11 @@ if __name__ == '__main__':
     # Read params
     parameters = json.loads(tools.remove_comments(open(sys.argv[1]).read()))
     
-    # Prepare fasta file with input sequence
-    input_fasta = FastaFile.open(parameters["query"]["fasta_file"])
-    input_fasta.write("QUERY", parameters["query"]["sequence"])
-    input_fasta.close()
+    if "sequence" in parameters["query"]:
+        # Prepare fasta file with input sequence
+        input_fasta = FastaFile.open(parameters["query"]["fasta_file"])
+        input_fasta.write("QUERY", parameters["query"]["sequence"])
+        input_fasta.close()
     
     # Look for a match in our DB
     alignments = BlastpCommands.find_closest_sequences(parameters["query"]["fasta_file"], 

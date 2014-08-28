@@ -22,6 +22,7 @@
 	"pdb_preparation": {
 		"load_selection": "all",
 		"forbidden_residues": ["478", "017"],
+		"min_ligand_atoms": 10,
 		"structure_database_path": "hiv1protease_pdb",
 		"pdb_id_exceptions": "HIV-1_Protease.mandatory.list"
 	},	
