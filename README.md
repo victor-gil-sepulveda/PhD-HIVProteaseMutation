@@ -1,7 +1,7 @@
 # HIV-1 Protease Induced Fit Simulation Protocol Implementation
 
 This repository contains the source code needed to perform the (computational) experiments 
-of [the paper] and  PELE++ webserver queries (link).  
+of [the paper] and  PELE++ web server queries (link).  
 
 These tools and scripts were written with tight time constraints, evolving specifications and 
 little domain knowledge. This made it difficult to fully generalize the code and have a decent test
