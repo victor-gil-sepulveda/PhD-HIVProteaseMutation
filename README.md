@@ -1,4 +1,4 @@
-# HIV-1 Protease Induced Fit Simulation Protocol Implementation
+# HIV-1 Protease Induced Fit Simulation Protocol
 
 This repository contains the source code needed to perform the (computational) experiments 
 of [the paper] and  PELE++ web server queries (link).  
@@ -32,16 +32,16 @@ Once installed you will be able to execute any of the scripts with:
 Were the arguments are usually one: a json configuration. Modify the example files that can be found here
 in order to fit your system's setup (give special attention to the 'exec' entries).
 
-## Main scripts
-This package includes 5 main scripts. Only 3 of them are a direct part of the protocol.  
+## Project Goals
 Roughly, this project had two different goals:  
 
 1. To automate the populate and maintenance a database of HIV-1 Protease-like protein structures, filter 
 and modify them following certain rules.
 
 2. To query this database in order to find a structure template candidate, modify it to have the 
-query sequence (mutate) and perform a PELE simulation.
+query sequence (mutate) and perform a PELE simulation.  
 
+This package includes 5 main scripts. Only 3 of them are a direct part of the protocol.  
 ### Database Generation (populateDB, curateDB, blastDBIds)
 
 #### populateDB
@@ -67,20 +67,28 @@ certain rules, and modifies them. Then it creates a new blast database with the 
 
 <img src="img/curateDB.png"> </img>
 
-Rules for alignments:
+Rules for alignments:  
+
 1. The length of the found sequence must be equal to the length of the master template sequence (99 residues per main chain).
+
 2. The alignment must not have any gap .
+
 3. We only want to have one hit per pdb id.
 
 Rules 1 and 2 imply that sequence overlap must be perfect, however this can be changed in the future to allow an
 initial and ending offset by relaxing rule 1.
 
-Rules for structures:
+Rules for structures:  
+
 1. We would like to have the already docked ligand and some waters. Ligand is a "heteroatom" chain with no less
 than 'pdb_preparation.min_ligand_atoms'.
+
 2. It must have 2 main chains.
+
 3. These main chains must have the same sequence.
-4. The structure must not have any residue with certain forbidden names (in this case, ligand names)
+
+4. The structure must not have any residue with certain forbidden names (in this case, ligand names)  
+
 
 Rules 2 and 3 are exclusive for this type of proteins (symmetric dimer).
 

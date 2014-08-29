@@ -520,15 +520,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="559.60173"
-     inkscape:cy="131.65263"
+     inkscape:zoom="1.4"
+     inkscape:cx="360.71526"
+     inkscape:cy="184.50179"
      inkscape:document-units="px"
      inkscape:current-layer="g6598-2"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="1000"
-     inkscape:window-x="1280"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      fit-margin-top="0"
@@ -543,7 +543,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -818,6 +818,20 @@
          d="m 192.96071,335.35316 c 17.07086,21.16482 16.6644,20.66089 16.6644,20.66089"
          id="path3836-1-5-5-8-6"
          inkscape:connector-curvature="0" />
+      <text
+         xml:space="preserve"
+         style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="-291.03024"
+         y="316.40155"
+         id="text3289"
+         sodipodi:linespacing="125%"
+         transform="matrix(0,-1,1,0,0,0)"
+         inkscape:export-xdpi="145"
+         inkscape:export-ydpi="145"><tspan
+           sodipodi:role="line"
+           id="tspan3291"
+           x="-291.03024"
+           y="316.40155">Docking (manual)</tspan></text>
     </g>
     <g
        id="g6733"
