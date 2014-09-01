@@ -18,6 +18,7 @@ class TestCuration(unittest.TestCase):
     # Special "difficult" cases
     # 1w5y has more than 2 waters
     # 1izi has 2 ions
+    # 1ytg does not have ligand
     
     def test_NoMoreThan2Waters(self):
         """
@@ -41,6 +42,16 @@ class TestCuration(unittest.TestCase):
         pdb, path = get_pdb_from_remote_or_db("1izi", "all", test_data.__path__[0])
         os.remove(path)
         self.assertItemsEqual(['Q50'], set(pdb.select(CurationSelections.LIGAND_SELECTION).getResnames()))
+    
+    def test_DoesHasLigand(self):
+        """
+        This pdb has no ligand, indeed has a small peptide acting as ligand.
+        NH2 is the only atom listed as heteroatom.
+        """
+        pdb, path = get_pdb_from_remote_or_db("1ytg", "all", test_data.__path__[0])
+        os.remove(path)['NH2']
+        self.assertItemsEqual(['NH2'], set(pdb.select(CurationSelections.LIGAND_SELECTION).getResnames()))
+    
         
         
 if __name__ == "__main__":
