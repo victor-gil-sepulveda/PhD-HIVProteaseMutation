@@ -96,11 +96,15 @@ Any id inside the mandatory structures file ('pdb_preparation.pdb_id_exceptions'
 the filtering step. The preparation of this mandatory structures must be finished **manually**.
 
 Protein preparation rules: 
-1. Protein must have only the two main chains.
+1. Protein must have only the two main chains.  
+
 2. Structure must keep only the waters closer to residue 50 of the master template (Lys). As we have two identical
-chains we will have at most two water molecules.
+chains we will have at most two water molecules. [EXTRA] In addition, the target water is the closer to the ligan. In
+case there is no ligand we will use the geometrical center of the chains (we must pick "inner" waters).
+
 3. Ligand must be preserved. Again, a ligand is considered to be a "heteroatom" chain with no less
-than 'pdb_preparation.min_ligand_atoms'.
+than 'pdb_preparation.min_ligand_atoms'.  
+
 
 - *db_curation_params.json* - is an example of the configuration file used with this script. 
 - *db_curation_params_remote_blast.json* - is a commented (and potentially outdated!) version of the previous

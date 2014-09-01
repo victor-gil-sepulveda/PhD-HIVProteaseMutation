@@ -34,13 +34,16 @@ def choose_main_chains(initial_pdb):
     leave_chains = [chain_id for _, chain_id in leave_chains]
     return leave_chains
 
-def process_water_structures(initial_pdb, main_chains ):
+def process_water_structures(initial_pdb, main_chains, ligand):
     """
     Detects the waters we have to keep (important for the simulation) and returns 
     a structure holding them.
-    Important waters are the ones closer to Template residue 50(Ile), the aa is not 
+    Important waters are the ones closer to Template residue 50 (Ile), the aa is not 
     but it is not guaranteed to be conserved, which means we have to rely into the 
     residue number to choose it, and take any offset into account if needed.
+    
+    Extra: water molecules must be also close to the binding site. We will pick then the 
+    water that has minimum distance to the binding site and residue 50
     
     :param initial_pdb: The pdb (prody structure) we want to extract the chains.
     
@@ -58,11 +61,17 @@ def process_water_structures(initial_pdb, main_chains ):
             
             residue_com = prody.calcCenter(residue)
             
-            # Identify closer water 
+            if ligand is None:
+                ligand_com = prody.calcCenter(initial_pdb)
+            else:
+                ligand_com =prody.calcCenter(ligand)
+                
+            # Identify closer water
             waters = initial_pdb.select("name O and water")
             if waters is not None:
-                distances = numpy.sqrt(((residue_com - waters.getCoords())**2).sum(axis=1))
-                
+                distance_to_R50 = numpy.sqrt(((residue_com - waters.getCoords())**2).sum(axis=1))
+                distance_to_BindSite = numpy.sqrt(((ligand_com - waters.getCoords())**2).sum(axis=1))
+                distances = distance_to_R50 + distance_to_BindSite
                 min_dist = numpy.min(distances)
                 min_dist_index = numpy.where(distances == min_dist)
                 water_resnum = waters.getResnums()[min_dist_index]
@@ -72,6 +81,7 @@ def process_water_structures(initial_pdb, main_chains ):
                 selection_string = "resnum %d and chain %s"%(water_resnum,
                                                              water_chid)
                 water_structs[water_id] = initial_pdb.water.select(selection_string).copy()
+                    
     return water_structs
 
 def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
@@ -101,7 +111,7 @@ def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
         tmp_struct = prot_struct
     
     # Add "important" waters, if found
-    water_structs = process_water_structures(initial_pdb, main_chains)
+    water_structs = process_water_structures(initial_pdb, main_chains, ligand_struct)
     pdb_alignment["pdb"]["waters"] = water_structs.keys() # Keep track of added waters in the alignment file
     for water_id in water_structs:
         tmp_struct = tmp_struct + water_structs[water_id]

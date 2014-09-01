@@ -13,9 +13,8 @@ from hivprotmut.structures.pdbcuration import curate_struct,\
 
 class TestCuration(unittest.TestCase):
 
-    # Normal, regression
-    
     # Special "difficult" cases
+    # ==========================
     # 1w5y has more than 2 waters
     # 1izi has 2 ions
     # 1ytg does not have ligand
@@ -27,14 +26,15 @@ class TestCuration(unittest.TestCase):
         pdb, path = get_pdb_from_remote_or_db("1w5y", "all", test_data.__path__[0])
         os.remove(path)
         
-        waters =  process_water_structures(pdb, ["A", "B"])
+        waters =  process_water_structures(pdb, 
+                                           ["A", "B"],
+                                           pdb.select(CurationSelections.LIGAND_SELECTION))
         expected_lengths = {
-                            "2036:B":1,
-                            "2035:B":1
+                            '2043:A':1
                             }
         for wat_id in expected_lengths:
             self.assertEqual(expected_lengths[wat_id], len(waters[wat_id]))
-            
+
     def test_NoIons(self):
         """
         No ions must be present in the structure.
@@ -49,7 +49,7 @@ class TestCuration(unittest.TestCase):
         NH2 is the only atom listed as heteroatom.
         """
         pdb, path = get_pdb_from_remote_or_db("1ytg", "all", test_data.__path__[0])
-        os.remove(path)['NH2']
+        os.remove(path)
         self.assertItemsEqual(['NH2'], set(pdb.select(CurationSelections.LIGAND_SELECTION).getResnames()))
     
         
