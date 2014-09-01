@@ -58,9 +58,13 @@ def process_water_structures(initial_pdb, main_chains ):
                 
                 min_dist = numpy.min(distances)
                 min_dist_index = numpy.where(distances == min_dist)
-                water_id = "%d:%s"%(waters.getResnums()[min_dist_index], waters.getChids()[min_dist_index][0])
+                water_resnum = waters.getResnums()[min_dist_index]
+                water_chid = waters.getChids()[min_dist_index][0]
+                water_id = "%d:%s"%(water_resnum, water_chid)
                 # We use a dict in order to get rid of repeats
-                water_structs[water_id] = initial_pdb.water.select("resnum %d"%waters.getResnums()[min_dist_index]).copy()
+                selection_string = "resnum %d and chain %s"%(water_resnum,
+                                                             water_chid)
+                water_structs[water_id] = initial_pdb.water.select(selection_string).copy()
     return water_structs
 
 def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
