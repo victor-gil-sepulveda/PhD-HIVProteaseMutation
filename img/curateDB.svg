@@ -574,7 +574,7 @@
      inkscape:cx="360.71526"
      inkscape:cy="298.7875"
      inkscape:document-units="px"
-     inkscape:current-layer="g6023-3"
+     inkscape:current-layer="g6598-2"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="1000"
@@ -879,9 +879,9 @@
          inkscape:export-xdpi="145"
          inkscape:export-ydpi="145"><tspan
            sodipodi:role="line"
-           id="tspan3291"
            x="-291.03024"
-           y="316.40155">Docking (manual)</tspan></text>
+           y="316.40155"
+           id="tspan3312">Docking (semi-automatic)</tspan></text>
       <path
          style="fill:none;stroke:#000000;stroke-width:0.60000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Lstart)"
          d="m 423.99413,271.10216 c 0,27.19125 0,26.54383 0,26.54383"

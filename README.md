@@ -127,7 +127,7 @@ The protein is then prepared using Schroedinger's Protein Preparation Wizard (Fr
 
 - *server_query_params.json* - is an example of the configuration file used with this script. 
 
-### Others (copyPdbsFromList)
+### Others (copyPdbsFromList, calcLigandComOfDB)
 
 #### copyPdbsFromList
 Copies the pdb ids defined in one file from one folder to other. It expects a flat pdb database, which means that all 
@@ -136,4 +136,14 @@ Execute it with:
 ```Shell
 > python -m hivprotmut.copyPdbsFromList ID_LIST_PATH ORIGIN_FOLDER TARGET_FOLDER
 ```
-Note that the target folder must exist.
+Note that the target folder must exist.  
+
+#### calcLigandComOfDB
+
+Calculates the com of the ligands in the pdb database, storing the results in one file. queryDB will later use this file to retrieve
+the Center of Mass (geometrical center of the heavy atoms indeed).
+
+It can be executed like this:
+```Shell
+> python -m hivprotmut.calcLigandComOfDB DATABASE_FOLDER OUTPUT_FILE
+```
