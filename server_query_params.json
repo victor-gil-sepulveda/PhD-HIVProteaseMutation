@@ -45,7 +45,7 @@
        "data_path": 		"/home/victor/plop/data",			// PLOP data path
        "output_file": 		"mutated.pdb",						// The 'MUTATED' and COMPLETE pdb file
        "options":{
-                  "hetero":	"no",								// "yes" or "no". Load heteroatoms
+                  "hetero": "no",								// "yes" or "no". Load heteroatoms
                   "optimize":"no"								// "yes" or "no". Perform PLOP optimization
        }
 	},
@@ -58,5 +58,14 @@
 		"max_monitoring_seconds":10,
 		"options": "-WAIT -noimpref -fix", 							// Options for prot wizard
 		"output_file": "final.pdb"								// File name of The Final PDB!!!
+	},
+	
+	
+	/***************************
+		CoM obtention
+	***************************/
+	"center_of_mass":{
+		"com_db": "hiv1protease_curated_pdb/coms.txt",
+		"com_output": "final.com"
 	}
 }

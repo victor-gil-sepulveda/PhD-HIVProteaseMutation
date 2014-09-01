@@ -41,7 +41,8 @@ if __name__ == '__main__':
 
         # Get pdb path from structures DB
         pdb_id = alignments[0]["pdb"]["id"].lower()
-        processed_pdb_path = os.path.join(parameters["query"]["ligand"],"%s.pdb"%pdb_id)
+        processed_pdb_path = os.path.join(parameters["query"]["ligand"],
+                                          "%s.pdb"%pdb_id)
         
         # "Mutate" pdb
         PdbPseudoMutation.process_pdb(mutations, 
@@ -62,6 +63,25 @@ if __name__ == '__main__':
             time.sleep(1)
             counter = counter + 1
 
+        
+        # Obtain precalculated CoM.
+        com_handler = open(parameters["center_of_mass"]["com_db"],"r")
+        pdb_path = os.path.join(parameters["query"]["ligand"], 
+                                alignments[0]["pdb"]["id"].lower())
+        
+        com_line = ""
+        for line in com_handler:
+            if pdb_path in line:
+                com_line = line
+                print com_line
+        com_handler.close()
+        
+        if com_line == "":
+            print "[ERROR] it was impossible to find the center of mass for %s."%alignments[0]["pdb"]["id"].lower()
+            exit()
+        else:
+            open(parameters["center_of_mass"]["com_output"],"w").write(com_line)
+            
         # PDB is prepared for lig exploration!
         print "[SUCCESS] This is the created pdb: %s"%(parameters["protein_wizard"]["output_file"])
         

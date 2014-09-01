@@ -75,7 +75,10 @@ if __name__ == '__main__':
                                       structure_db_path)
         
         main_chains = choose_main_chains(pdb)
-        curated_pdb = curate_struct(pdb, main_chains, alignment, parameters["pdb_preparation"])
+        curated_pdb, ligand = curate_struct(pdb, 
+                                            main_chains, 
+                                            alignment, 
+                                            parameters["pdb_preparation"])
 
         failed_filters = structure_filter.must_be_filtered(curated_pdb)
         if len(failed_filters) == 0 or alignment["pdb"]["id"] in id_exceptions:

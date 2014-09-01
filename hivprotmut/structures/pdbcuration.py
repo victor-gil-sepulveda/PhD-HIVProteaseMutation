@@ -9,6 +9,7 @@ import numpy
 
 class CurationSelections():
     LIGAND_SELECTION = "hetero not water not ion"
+    HEAVY_LIGAND_SELECTION = "hetero and not water and not ion and not hydrogen"
     PROTEIN_CHAIN_TEMPLATE = "protein chain %s"
     
     def __init__(self):
@@ -94,7 +95,7 @@ def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
     
     :param initial_pdb: The prody pdb structure we want to extract the chains.
     
-    :return: The "curated" pdb.
+    :return: The "curated" pdb and the ligand
     """
     # Get chain info (without ligand or waters)
     hw = prody.HierView(initial_pdb.select("protein"))
@@ -116,4 +117,4 @@ def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
     for water_id in water_structs:
         tmp_struct = tmp_struct + water_structs[water_id]
     
-    return tmp_struct
+    return tmp_struct, ligand_struct
