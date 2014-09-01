@@ -7,6 +7,13 @@ Created on 25/8/2014
 import prody
 import numpy
 
+class CurationSelections():
+    LIGAND_SELECTION = "hetero not water not ion"
+    PROTEIN_CHAIN_TEMPLATE = "protein chain %s"
+    
+    def __init__(self):
+        pass
+
 def choose_main_chains(initial_pdb):
     """
     We can have complexes attached to the chain or even duplicated chains
@@ -84,10 +91,10 @@ def curate_struct(initial_pdb, main_chains, pdb_alignment, parameters):
     pdb_alignment["pdb"]["num_chains"] = hw.numChains()
 
     # Pick main chains
-    prot_struct = initial_pdb.select("protein chain %s"%(" ".join(main_chains))).copy()
+    prot_struct = initial_pdb.select(CurationSelections.PROTEIN_CHAIN_TEMPLATE%(" ".join(main_chains))).copy()
     
-    # Add the ligand (if found)
-    ligand_struct = initial_pdb.select("hetero not water")
+    # Add the ligand (if found), must be part of other chains (not main_chains)
+    ligand_struct = initial_pdb.select(CurationSelections.LIGAND_SELECTION)
     if ligand_struct is not None and ligand_struct.numAtoms() >= parameters["min_ligand_atoms"]:
         tmp_struct = prot_struct + ligand_struct.copy()
     else:
