@@ -22,8 +22,8 @@ class PlopCommands(object):
     def reconstruct_pdb(cls, input_pdb, parameters):
         script = PlopCommands.PLOP_CONTROL_TEMPLATE%(parameters["data_path"], 
                                                      input_pdb, 
-                                                     parameters["options"]["optimize"],
                                                      parameters["options"]["hetero"],
+                                                     parameters["options"]["optimize"],
                                                      parameters["output_file"])
         open(parameters["control_file"],"w").write(script)
         os.system(PlopCommands.PLOP_EXECUTION%(parameters["exec"], parameters["control_file"]))
